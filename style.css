@@ -1,198 +1,268 @@
-/* Globale Variablen für Farben */
-:root {
-    --bg-color: #143625;       /* Weihnachtliches Tannengrün als Hintergrund */
-    --tile-border: #3a634e;    /* Randfarbe der leeren Kacheln */
-    --text-color: #ffffff;     /* Weißer Text */
-    --gold-accent: #e5c158;    /* Goldton für den Titel */
-    
-    /* Status-Farben für die Buchstaben-Auswertung */
-    --color-correct: #538d4e;  /* Klassisches Grün (richtiger Buchstabe, richtige Stelle) */
-    --color-present: #e5c158;  /* Weihnachtliches Rot (richtiger Buchstabe, falsche Stelle) */
-    --color-absent: #505050;   /* Klassisches Grau (Buchstabe kommt nicht vor) */
-    --key-bg: #818384;         /* Tastatur-Hintergrund */
+/* ==========================================================================
+   WIE DIESES LAYOUT FUNKTIONIERT (kurz erklärt)
+   --------------------------------------------------------------------------
+   Alle Größen werden zentral oben in :root als "Variablen" festgelegt.
+   Die Kachelgröße wird dann AUTOMATISCH berechnet aus:
+     a) der verfügbaren BREITE  -> Kacheln dürfen nicht breiter sein als der Bildschirm
+     b) der verfügbaren HÖHE    -> Kacheln dürfen nicht höher sein als der Platz, der
+                                   nach Titel, Popup, Tastatur und Abständen übrig bleibt
+   Der kleinere der beiden Werte gewinnt (plus eine Ober- und Untergrenze).
+   Dadurch passt das Spiel auf kleinen UND großen Handys ohne zu scrollen,
+   und die Abstände bleiben immer zwischen einem Minimal- und Maximalwert.
+   Alle Werte, die du verändern kannst, stehen im Abschnitt 1 und 2 (:root).
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. FARB-VARIABLEN (Hier kannst du alle Farben zentral anpassen)
+   ========================================================================== */
+:root {                          /* :root = oberste Ebene; Variablen gelten hier für die ganze Seite */
+    --bg-color: #143625;         /* Seitenhintergrund. Einstellbar: beliebiger Hex-Farbcode, z.B. #0b2a1b (dunkler) */
+    --tile-border: #3a634e;      /* Rahmenfarbe leerer Kacheln. Einstellbar: Hex-Farbcode */
+    --text-color: #ffffff;       /* Standard-Textfarbe (Buchstaben, Tastenbeschriftung). Einstellbar: Hex-Farbcode */
+    --gold-accent: #e5c158;      /* Goldton der Überschrift. Einstellbar: Hex-Farbcode */
+
+    --color-correct: #538d4e;    /* Grün: richtiger Buchstabe an richtiger Stelle. Einstellbar: Hex-Farbcode */
+    --color-present: #c93b3b;    /* Rot: Buchstabe kommt vor, aber an anderer Stelle. Einstellbar: Hex-Farbcode */
+    --color-absent: #3a3a3c;     /* Grau: Buchstabe kommt nicht im Wort vor. Einstellbar: Hex-Farbcode */
+    --key-bg: #818384;           /* Tastenfarbe der Bildschirmtastatur (unbenutzt). Einstellbar: Hex-Farbcode */
 }
 
-/* Reset: Vereinheitlicht Innen- und Außenabstände für alle HTML-Elemente */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+
+/* ==========================================================================
+   2. LAYOUT-VARIABLEN (HIER stellst du Größen und Abstände ein!)
+   Schreibweise clamp(MINIMUM, WUNSCHWERT, MAXIMUM):
+     -> der Wert wächst/schrumpft mit dem Bildschirm, bleibt aber immer
+        zwischen MINIMUM und MAXIMUM.
+   ========================================================================== */
+:root {                          /* zweiter :root-Block, nur zur besseren Übersicht getrennt */
+
+    /* ---- Bildschirmhöhe (technische Grundlage, normalerweise nicht ändern) ---- */
+    --vh: 1vh;                   /* 1 "vh" = 1% der Bildschirmhöhe (Fallback für sehr alte Browser) */
+    --app-h: calc(100 * var(--vh)); /* Gesamthöhe des Spiels = 100% der Bildschirmhöhe */
+
+    /* ---- Gesamtbreite ---- */
+    --content-w: min(94vw, 460px); /* Maximale Spielbreite. 94vw = 94% der Handybreite. Einstellbar: 460px = Obergrenze auf Tablet/PC; 94vw = Seitenrand (z.B. 100vw = kein Rand) */
+    --keyboard-w: min(94vw, 500px); /* Maximale Tastaturbreite. Einstellbar: 500px = Obergrenze; 94vw = Seitenrand der Tastatur */
+
+    /* ---- Vertikale Abstände zwischen den 4 Blöcken (Titel, Popup, Raster, Tastatur) ---- */
+    --gap: clamp(8px, calc(2.2 * var(--vh)), 28px); /* Abstand zwischen den Blöcken. Einstellbar: 8px = Minimum (nie enger); 2.2 = Prozent der Bildschirmhöhe (größer = luftiger); 28px = Maximum (nie weiter) */
+    --pad-y: clamp(8px, calc(1.5 * var(--vh)), 16px); /* Abstand ganz oben und ganz unten am Bildschirmrand. Einstellbar: Minimum 8px, Wunschwert 1.5% der Höhe, Maximum 16px */
+
+    /* ---- Größe der festen Blöcke ---- */
+    --header-h: clamp(28px, calc(4.5 * var(--vh)), 40px); /* Höhe des Titelbereichs. Einstellbar: Minimum 28px, Wunschwert 4.5% der Höhe, Maximum 40px */
+    --msg-h: 32px;               /* Höhe des Popups (reserviert, damit nichts springt). Einstellbar: Pixelwert, z.B. 36px für größeres Popup */
+
+    /* ---- Tastatur ---- */
+    --key-h: clamp(40px, calc(6.2 * var(--vh)), 52px); /* Höhe einer Taste. Einstellbar: Minimum 40px (noch gut tippbar), Wunschwert 6.2% der Höhe, Maximum 52px */
+    --key-row-gap: clamp(4px, calc(0.9 * var(--vh)), 8px); /* Abstand zwischen den 3 Tastenreihen (vertikal). Einstellbar: Minimum 4px, Wunschwert 0.9% der Höhe, Maximum 8px */
+    --key-col-gap: clamp(3px, 1vw, 6px); /* Abstand zwischen den Tasten einer Reihe (horizontal). Einstellbar: Minimum 3px, 1vw = 1% der Breite, Maximum 6px */
+    --keyboard-h: calc(3 * var(--key-h) + 2 * var(--key-row-gap)); /* Gesamthöhe der Tastatur (wird berechnet, NICHT ändern: 3 Reihen + 2 Zwischenräume) */
+
+    /* ---- Buchstabenraster ---- */
+    --tile-gap: clamp(4px, 1.2vw, 8px); /* Abstand zwischen den Kacheln (horizontal und vertikal). Einstellbar: Minimum 4px, 1.2vw = 1.2% der Breite, Maximum 8px */
+    --tile-min: 30px;            /* Kleinste erlaubte Kachelgröße (Notfall-Untergrenze für winzige Displays). Einstellbar: Pixelwert */
+    --tile-max: 72px;            /* Größte erlaubte Kachelgröße (verhindert riesige Kacheln auf Tablets). Einstellbar: Pixelwert, z.B. 64px für kleinere Kacheln */
+
+    /* ---- Automatische Kachelberechnung (NICHT ändern, wird aus den Werten oben berechnet) ---- */
+    --tile-by-width: calc((var(--content-w) - 4 * var(--tile-gap)) / 5); /* Kachelgröße, die in die BREITE passt: (Breite - 4 Lücken) / 5 Spalten */
+    --board-h-avail: calc(var(--app-h) - 2 * var(--pad-y) - var(--header-h) - var(--msg-h) - var(--keyboard-h) - 3 * var(--gap)); /* Höhe, die für das Raster übrig bleibt: Bildschirm minus Ränder, Titel, Popup, Tastatur, 3 Lücken */
+    --tile-by-height: calc((var(--board-h-avail) - 5 * var(--tile-gap)) / 6); /* Kachelgröße, die in die HÖHE passt: (übrige Höhe - 5 Lücken) / 6 Zeilen */
+    --tile-size: clamp(var(--tile-min), min(var(--tile-by-width), var(--tile-by-height)), var(--tile-max)); /* Endgültige Kachelgröße: der kleinere der beiden Werte, begrenzt durch Min und Max */
 }
 
-/* 
-  BODY: 
-  Nutzt 100dvh (Dynamic Viewport Height), damit mobile Browser-Leisten 
-  das Layout unten nicht abschneiden. 'position: fixed' verhindert Wackeln/Scrollen.
-*/
-body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family: 'Montserrat', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100dvh;
-    width: 100vw;
-    overflow: hidden;
-    position: fixed;
+/* Moderne Handy-Browser: "dvh" berücksichtigt die ein-/ausfahrende Adressleiste */
+@supports (height: 1dvh) {       /* Nur ausführen, wenn der Browser die Einheit "dvh" kennt */
+    :root {                      /* Variablen auf oberster Ebene überschreiben */
+        --vh: 1dvh;              /* 1 "dvh" = 1% der tatsächlich sichtbaren Bildschirmhöhe (exakter auf Handys) */
+    }
 }
 
-/* 
-  HAUPTCONTAINER:
-  Zentriert das gesamte Spiel und verteilt Header, Nachrichten, Spielfeld und Tastatur 
-  sauber auf der verfügbaren Bildschirmhöhe.
-*/
-.game-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
-    width: 100%;
-    max-width: 440px;         /* Begrenzt die Breite auf großen PC-Bildschirmen */
-    padding: max(10px, 1.5dvh) 10px max(12px, env(safe-area-inset-bottom));
+
+/* ==========================================================================
+   3. GLOBALER RESET
+   ========================================================================== */
+* {                              /* Gilt für ALLE Elemente */
+    box-sizing: border-box;      /* Padding und Rahmen zählen zur Elementgröße dazu (Elemente sprengen ihre Größe nicht). Nicht ändern */
+    margin: 0;                   /* Entfernt Standard-Außenabstände des Browsers */
+    padding: 0;                  /* Entfernt Standard-Innenabstände des Browsers */
 }
 
-/* Kopfbereich mit Titel */
-header {
-    text-align: center;
-    flex-shrink: 0;            /* Verhindert, dass die Überschrift gestaucht wird */
+
+/* ==========================================================================
+   4. SEITEN-GRUNDGERÜST (BODY)
+   ========================================================================== */
+body {                           /* Gesamte Seite */
+    background-color: var(--bg-color); /* Hintergrundfarbe aus Abschnitt 1 */
+    color: var(--text-color);    /* Standard-Textfarbe aus Abschnitt 1 */
+    font-family: 'Montserrat', sans-serif; /* Schriftart. Einstellbar: anderer Google-Font (muss in index.html eingebunden sein) */
+    display: flex;               /* Flexbox, um den Spielcontainer zu zentrieren */
+    justify-content: center;     /* Zentriert das Spiel waagerecht. Einstellbar: flex-start (links) / flex-end (rechts) */
+    align-items: center;         /* Zentriert das Spiel senkrecht. Einstellbar: flex-start (oben) / flex-end (unten) */
+    height: var(--app-h);        /* Volle Bildschirmhöhe (aus Abschnitt 2) */
+    width: 100vw;                /* Volle Bildschirmbreite */
+    overflow: hidden;            /* Kein Scrollen. Einstellbar: auto (Scrollen erlauben, nicht empfohlen) */
+    position: fixed;             /* Verhindert das "Gummiband-Wackeln" auf iPhones. Nicht ändern */
+    top: 0;                      /* Seite klebt am oberen Bildschirmrand */
+    left: 0;                     /* Seite klebt am linken Bildschirmrand */
+    -webkit-text-size-adjust: 100%; /* Verhindert, dass iPhones Schriftgrößen beim Drehen eigenmächtig vergrößern */
 }
 
-header h1 {
-    font-size: clamp(1.1rem, 4vw, 1.5rem); /* Passt die Schriftgröße fließend an */
-    color: var(--gold-accent);
-    letter-spacing: 0.5px;
+
+/* ==========================================================================
+   5. HAUPTCONTAINER (Hält Titel, Popup, Raster und Tastatur zusammen)
+   ========================================================================== */
+.game-container {                /* Der <main>-Container im HTML */
+    display: flex;               /* Flexbox, damit sich die Blöcke untereinander anordnen lassen */
+    flex-direction: column;      /* Blöcke stehen untereinander (Titel, Popup, Raster, Tastatur) */
+    align-items: center;         /* Zentriert alle Blöcke horizontal */
+    justify-content: center;     /* Zentriert die Blöcke vertikal. Einstellbar: space-between (Blöcke an Rändern verteilen), space-evenly (gleichmäßig verteilen, Abstände dann unbegrenzt) */
+    gap: var(--gap);             /* Dynamischer Abstand zwischen den Blöcken (aus Abschnitt 2) */
+    height: var(--app-h);        /* Container nutzt die volle Bildschirmhöhe */
+    width: var(--content-w);     /* Container-Breite (aus Abschnitt 2) */
+    padding: var(--pad-y) 0;     /* Abstand oben/unten zum Bildschirmrand, links/rechts 0 */
 }
 
-/* 
-  NACHRICHTEN-CONTAINER:
-  Feste Höhe reserviert permanent Platz zwischen Titel und Spielfeld.
-  Dadurch springt das Layout nicht, wenn eine Meldung erscheint.
-*/
-#message-container {
-    background-color: #ffffff;
-    color: #143625;
-    padding: 4px 12px;
-    border-radius: 6px;
-    font-weight: bold;
-    font-size: 0.8rem;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    text-align: center;
-    flex-shrink: 0;
-    opacity: 1;
-    transition: opacity 0.2s ease;
-    margin: 4px 0;
+
+/* ==========================================================================
+   6. KOPFBEREICH (Überschrift)
+   ========================================================================== */
+header {                         /* Bereich mit dem Titel */
+    height: var(--header-h);     /* Feste (dynamische) Höhe, damit die Rechnung in Abschnitt 2 stimmt */
+    display: flex;               /* Flexbox zum Zentrieren des Titels */
+    align-items: center;         /* Titel senkrecht mittig im Bereich */
+    justify-content: center;     /* Titel waagerecht mittig im Bereich */
+    flex-shrink: 0;              /* Verhindert, dass der Titel zusammengedrückt wird. Nicht ändern */
 }
 
-/* Unsichtbarer Zustand (nimmt trotzdem weiterhin den reservierten Platz ein) */
-#message-container.hidden {
-    opacity: 0;
-    pointer-events: none;      /* Macht das unsichtbare Feld unklickbar */
+header h1 {                      /* Der Titeltext selbst */
+    font-size: clamp(1.1rem, 4.8vw, 1.6rem); /* Schriftgröße. Einstellbar: Minimum 1.1rem, 4.8vw = 4.8% der Breite, Maximum 1.6rem (nicht über --header-h wachsen lassen) */
+    line-height: 1;              /* Zeilenhöhe = Schriftgröße (keine zusätzliche Höhe). Nicht ändern */
+    white-space: nowrap;         /* Titel bricht nie in zwei Zeilen um. Einstellbar: normal (Umbruch erlauben) */
+    color: var(--gold-accent);   /* Titelfarbe (Gold aus Abschnitt 1) */
+    letter-spacing: 0.5px;       /* Abstand zwischen Buchstaben. Einstellbar: Pixelwert, 0 = eng, 2px = weit */
 }
 
-/* 
-  SPIELFELD-GRID (DER FIX):
-  Durch 'height: min(48dvh, 72vw)' bekommt das Grid sofort eine feste Größe –
-  egal ob auf dem Handy (dvh limitiert) oder am PC (vw/Container limitiert).
-  'aspect-ratio: 5 / 6' berechnet daraus automatisch die exakte Breite für 5 Spalten und 6 Zeilen!
-*/
-#board {
-    display: grid;
-    grid-template-rows: repeat(6, 1fr);
-    grid-gap: clamp(4px, 0.8dvh, 8px);
-    height: min(48dvh, 72vw);  /* Feste, dynamische Höhe verhindert das Schrumpfen im leeren Zustand */
-    aspect-ratio: 5 / 6;       /* Sorgt dafür, dass jede Kachel quadratisch bleibt */
-    margin: auto 0;            /* Zentriert das Spielfeld vertikal im freien Platz */
+
+/* ==========================================================================
+   7. NACHRICHTEN-CONTAINER (Popup für Fehler und Sieg)
+   ========================================================================== */
+#message-container {             /* Das Popup-Feld */
+    background-color: #ffffff;   /* Hintergrundfarbe des Popups. Einstellbar: Hex-Farbcode */
+    color: #143625;              /* Textfarbe im Popup. Einstellbar: Hex-Farbcode */
+    height: var(--msg-h);        /* Feste Höhe (aus Abschnitt 2), damit beim Ein-/Ausblenden nichts springt */
+    max-width: 100%;             /* Popup wird nie breiter als der Spielbereich */
+    padding: 0 14px;             /* Innenabstand links/rechts im Popup. Einstellbar: Pixelwert */
+    border-radius: 6px;          /* Rundung der Ecken. Einstellbar: 0 = eckig, 16px = sehr rund */
+    font-weight: bold;           /* Fettdruck. Einstellbar: normal oder bold */
+    font-size: clamp(0.75rem, 3.2vw, 0.9rem); /* Schriftgröße. Einstellbar: Minimum 0.75rem, 3.2vw = 3.2% der Breite, Maximum 0.9rem */
+    white-space: nowrap;         /* Text bleibt in einer Zeile (Höhe ist fest). Nicht ändern */
+    display: flex;               /* Flexbox zum Zentrieren des Textes */
+    align-items: center;         /* Text senkrecht mittig */
+    justify-content: center;     /* Text waagerecht mittig */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); /* Schatten: x-Versatz, y-Versatz, Unschärfe, Farbe (0.4 = 40% Deckkraft) */
+    text-align: center;          /* Text zentriert ausrichten */
+    flex-shrink: 0;              /* Popup wird nicht zusammengedrückt. Nicht ändern */
+    opacity: 1;                  /* Voll sichtbar (1 = 100%) */
+    transition: opacity 0.2s ease; /* Weiches Ein-/Ausblenden. Einstellbar: Dauer, z.B. 0.5s = langsamer */
 }
 
-/* Einzelne Zeile im Spielfeld (5 gleich breite Spalten) */
-.row {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-gap: clamp(4px, 0.8dvh, 8px);
+#message-container.hidden {      /* Zustand, wenn keine Nachricht angezeigt wird */
+    opacity: 0;                  /* Unsichtbar, belegt aber weiterhin den Platz im Layout */
+    pointer-events: none;        /* Unsichtbares Feld ist nicht klickbar */
 }
 
-/* 
-  EINZELNE KACHEL:
-  Füllt ihre Grid-Zelle komplett aus und skaliert die Buchstaben proportional mit.
-*/
-.tile {
-    width: 100%;
-    height: 100%;
-    border: 2px solid var(--tile-border);
-    background-color: rgba(20, 54, 37, 0.85);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: clamp(1.1rem, 3.8dvh, 1.8rem);
-    font-weight: bold;
-    text-transform: uppercase;
-    user-select: none;
-    transition: transform 0.2s, background-color 0.4s;
-    border-radius: 4px;
+
+/* ==========================================================================
+   8. SPIELFELD-GRID (Die 6x5 Buchstaben-Kacheln)
+   ========================================================================== */
+#board {                         /* Das gesamte Raster */
+    display: grid;               /* Grid-Layout für die 6 Zeilen */
+    grid-template-rows: repeat(6, var(--tile-size)); /* 6 Zeilen, jede genau so hoch wie eine Kachel. Einstellbar: Zahl 6 = Anzahl Versuche (muss zu ROWS in script.js passen) */
+    row-gap: var(--tile-gap);    /* Abstand zwischen den Zeilen (aus Abschnitt 2) */
+    flex-shrink: 0;              /* Raster wird nicht zusammengedrückt. Nicht ändern */
 }
 
-/* Status-Farben nach dem Absenden eines Wortes */
-.correct {
-    background-color: var(--color-correct) !important;
-    border-color: var(--color-correct) !important;
+.row {                           /* Eine einzelne Zeile mit 5 Kacheln */
+    display: grid;               /* Grid-Layout für die 5 Spalten */
+    grid-template-columns: repeat(5, var(--tile-size)); /* 5 Spalten, jede genau so breit wie eine Kachel. Einstellbar: Zahl 5 = Wortlänge (muss zu COLS in script.js passen) */
+    column-gap: var(--tile-gap); /* Abstand zwischen den Kacheln einer Zeile (aus Abschnitt 2) */
 }
 
-.present {
-    background-color: var(--color-present) !important;
-    border-color: var(--color-present) !important;
+.tile {                          /* Eine einzelne Buchstaben-Kachel */
+    width: 100%;                 /* Füllt die Grid-Zelle (= --tile-size) in der Breite */
+    height: 100%;                /* Füllt die Grid-Zelle (= --tile-size) in der Höhe */
+    border: 2px solid var(--tile-border); /* Rahmen: Dicke, Linienart, Farbe. Einstellbar: Dicke, z.B. 3px */
+    background-color: rgba(20, 54, 37, 0.85); /* Hintergrund leerer Kacheln (RGB + Deckkraft 0.85). Einstellbar: Werte oder Hex-Farbcode */
+    display: flex;               /* Flexbox zum Zentrieren des Buchstabens */
+    justify-content: center;     /* Buchstabe waagerecht mittig */
+    align-items: center;         /* Buchstabe senkrecht mittig */
+    font-size: calc(var(--tile-size) * 0.55); /* Buchstabengröße = 55% der Kachelgröße (wächst automatisch mit). Einstellbar: Faktor, 0.45 = kleiner, 0.65 = größer */
+    font-weight: bold;           /* Fettdruck. Einstellbar: normal oder bold */
+    text-transform: uppercase;   /* Buchstaben immer als Großbuchstaben */
+    user-select: none;           /* Text kann nicht markiert werden (wichtig auf Handys) */
+    transition: transform 0.2s, background-color 0.4s; /* Weiche Animationen: Dauer für Bewegung (0.2s) und Farbwechsel (0.4s). Einstellbar: Zeiten */
+    border-radius: 4px;          /* Rundung der Ecken. Einstellbar: 0 = eckig, 8px = runder */
 }
 
-.absent {
-    background-color: var(--color-absent) !important;
-    border-color: var(--color-absent) !important;
+.correct {                       /* Kachel/Taste: richtiger Buchstabe, richtige Stelle */
+    background-color: var(--color-correct) !important; /* Grün (!important = überschreibt alle anderen Hintergründe) */
+    border-color: var(--color-correct) !important; /* Rahmen in derselben Farbe */
 }
 
-/* BILDSCHIRMTASTATUR */
-#keyboard {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: clamp(4px, 0.7dvh, 6px);
-    flex-shrink: 0;            /* Tastatur wird niemals zusammengedrückt */
+.present {                       /* Kachel/Taste: Buchstabe kommt vor, aber an falscher Stelle */
+    background-color: var(--color-present) !important; /* Rot */
+    border-color: var(--color-present) !important; /* Rahmen in derselben Farbe */
 }
 
-/* Eine Tastenreihe */
-.keyboard-row {
-    display: flex;
-    justify-content: center;
-    gap: clamp(3px, 0.8vw, 5px);
+.absent {                        /* Kachel/Taste: Buchstabe kommt nicht vor */
+    background-color: var(--color-absent) !important; /* Grau */
+    border-color: var(--color-absent) !important; /* Rahmen in derselben Farbe */
 }
 
-/* Einzelne Taste auf der Tastatur */
-button {
-    font-family: inherit;
-    font-weight: bold;
-    border: 0;
-    padding: 0;
-    height: clamp(38px, 5.5dvh, 48px); /* Dynamische Höhe für Handy & PC */
-    border-radius: 4px;
-    cursor: pointer;
-    background-color: var(--key-bg);
-    color: var(--text-color);
-    flex: 1;
-    max-width: 40px;
-    font-size: clamp(0.7rem, 2.2vw, 0.9rem);
-    user-select: none;
+
+/* ==========================================================================
+   9. BILDSCHIRMTASTATUR
+   ========================================================================== */
+#keyboard {                      /* Gesamte Tastatur */
+    width: var(--keyboard-w);    /* Tastaturbreite (aus Abschnitt 2) */
+    display: flex;               /* Flexbox, damit sich die Tastenreihen untereinander anordnen */
+    flex-direction: column;      /* Reihen stehen untereinander */
+    gap: var(--key-row-gap);     /* Abstand zwischen den Reihen (aus Abschnitt 2) */
+    flex-shrink: 0;              /* Tastatur wird nicht zusammengedrückt. Nicht ändern */
 }
 
-/* Breitere Tasten für ENTER und Backspace */
-button.wide-key {
-    max-width: 62px;
-    font-size: clamp(0.55rem, 1.6vw, 0.7rem);
+.keyboard-row {                  /* Eine Tastenreihe */
+    display: flex;               /* Flexbox, damit sich die Tasten nebeneinander anordnen */
+    justify-content: center;     /* Tasten in der Reihe zentrieren (kürzere Reihen stehen mittig). Einstellbar: flex-start = linksbündig */
+    gap: var(--key-col-gap);     /* Abstand zwischen den Tasten (aus Abschnitt 2) */
 }
 
-/* Visuelles Feedback beim Antippen */
-button:active {
-    opacity: 0.8;
+#keyboard button {               /* Jede einzelne Taste */
+    font-family: inherit;        /* Übernimmt die Schriftart der Seite (Buttons nutzen sonst Systemschrift) */
+    font-weight: bold;           /* Fettdruck. Einstellbar: normal oder bold */
+    font-size: clamp(0.7rem, 3vw, 0.95rem); /* Schriftgröße der Tasten. Einstellbar: Minimum 0.7rem, 3vw = 3% der Breite, Maximum 0.95rem */
+    border: 0;                   /* Kein Rahmen. Einstellbar: z.B. 1px solid #fff */
+    padding: 0;                  /* Kein Innenabstand (Buchstabe wird per Flex zentriert) */
+    height: var(--key-h);        /* Tastenhöhe (aus Abschnitt 2) */
+    flex: 1;                     /* Alle Tasten teilen sich die Reihenbreite gleichmäßig */
+    min-width: 0;                /* Erlaubt Tasten, auf schmalen Handys zu schrumpfen. Nicht ändern */
+    max-width: 44px;             /* Maximale Tastenbreite auf großen Bildschirmen. Einstellbar: Pixelwert */
+    border-radius: 4px;          /* Rundung der Ecken. Einstellbar: 0 = eckig, 8px = runder */
+    background-color: var(--key-bg); /* Tastenfarbe (aus Abschnitt 1) */
+    color: var(--text-color);    /* Beschriftungsfarbe (aus Abschnitt 1) */
+    cursor: pointer;             /* Handzeiger bei Maus-Bedienung am PC */
+    user-select: none;           /* Beschriftung kann nicht markiert werden */
+    touch-action: manipulation;  /* Verhindert Doppeltipp-Zoom beim schnellen Tippen auf Handys. Nicht ändern */
+    -webkit-tap-highlight-color: transparent; /* Entfernt das graue Aufblitzen beim Antippen auf iPhones/Android */
+}
+
+#keyboard button.wide-key {      /* Die breiten Tasten ENTER und ⌫ */
+    flex: 1.5;                   /* Diese Tasten sind 1,5x so breit wie normale Tasten. Einstellbar: 1 = gleich breit, 2 = doppelt so breit */
+    max-width: 66px;             /* Maximale Breite auf großen Bildschirmen. Einstellbar: Pixelwert */
+    font-size: clamp(0.55rem, 2.2vw, 0.75rem); /* Kleinere Schrift, damit "ENTER" hineinpasst. Einstellbar: Minimum, Wunschwert, Maximum */
+}
+
+#keyboard button:active {        /* Zustand, solange die Taste gedrückt wird */
+    opacity: 0.8;                /* Leicht durchsichtig als Tipp-Feedback. Einstellbar: 1 = kein Effekt, 0.5 = deutlicher */
 }

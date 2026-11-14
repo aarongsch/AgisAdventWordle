@@ -1,25 +1,29 @@
 /* Globale Variablen für Farben */
 :root {
-    --bg-color: #143625;       /* Weihnachtliches Tannengrün */
+    --bg-color: #143625;       /* Weihnachtliches Tannengrün als Hintergrund */
     --tile-border: #3a634e;    /* Randfarbe der leeren Kacheln */
     --text-color: #ffffff;     /* Weißer Text */
     --gold-accent: #e5c158;    /* Goldton für den Titel */
     
-    /* Status-Farben */
-    --color-correct: #538d4e;  /* Grün */
-    --color-present: #e5c158;  /* Rot (ersetzt Gelb) */
-    --color-absent: #505050;   /* Grau */
+    /* Status-Farben für die Buchstaben-Auswertung */
+    --color-correct: #538d4e;  /* Klassisches Grün (richtiger Buchstabe, richtige Stelle) */
+    --color-present: #e5c158;  /* Weihnachtliches Rot (richtiger Buchstabe, falsche Stelle) */
+    --color-absent: #505050;   /* Klassisches Grau (Buchstabe kommt nicht vor) */
     --key-bg: #818384;         /* Tastatur-Hintergrund */
 }
 
-/* Reset: Abstände vereinheitlichen */
+/* Reset: Vereinheitlicht Innen- und Außenabstände für alle HTML-Elemente */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-/* Body: Füllt exakt den Bildschirm aus, verhindert horizontales Scrollen */
+/* 
+  BODY: 
+  Nutzt 100dvh (Dynamic Viewport Height), damit mobile Browser-Leisten 
+  das Layout unten nicht abschneiden. 'position: fixed' verhindert Wackeln/Scrollen.
+*/
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
@@ -27,110 +31,113 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100dvh;
     width: 100vw;
     overflow: hidden;
-    position: relative;
+    position: fixed;
 }
 
 /* 
-  HAUPTCONTAINER (Dynamisch)
-  Nutzt nun min(95vw, 420px): Er nimmt auf kleinen Handys 95% der Bildschirmbreite ein, 
-  wächst aber auf größeren Geräten maximal bis zu 420px an.
+  HAUPTCONTAINER:
+  Zentriert das gesamte Spiel und verteilt Header, Nachrichten, Spielfeld und Tastatur 
+  sauber auf der verfügbaren Bildschirmhöhe.
 */
 .game-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    height: 100vh;
-    max-height: 750px;         /* Hindert das Spiel daran, auf Riesen-Displays unendlich lang zu werden */
-    width: min(95vw, 420px);   /* Dynamische Breite je nach Bildschirm */
-    padding: 2vh 2vw;          /* Dynamische Innenabstände basierend auf Bildschirmgröße */
+    height: 100%;
+    width: 100%;
+    max-width: 440px;         /* Begrenzt die Breite auf großen PC-Bildschirmen */
+    padding: max(10px, 1.5dvh) 10px max(12px, env(safe-area-inset-bottom));
 }
 
-/* Kopfbereich */
+/* Kopfbereich mit Titel */
 header {
     text-align: center;
-    flex-shrink: 0;
+    flex-shrink: 0;            /* Verhindert, dass die Überschrift gestaucht wird */
 }
 
 header h1 {
-    font-size: clamp(1rem, 4vw, 1.5rem); /* Schriftgröße skaliert fließend mit der Bildschirmgröße */
+    font-size: clamp(1.1rem, 4vw, 1.5rem); /* Passt die Schriftgröße fließend an */
     color: var(--gold-accent);
     letter-spacing: 0.5px;
 }
 
 /* 
-  NACHRICHTENZENTRALE (Fester Platzhalter)
-  Hat eine feste Höhe, damit der Platz immer reserviert ist.
-  Dadurch verschiebt sich beim Einblenden absolut gar nichts mehr!
+  NACHRICHTEN-CONTAINER:
+  Feste Höhe reserviert permanent Platz zwischen Titel und Spielfeld.
+  Dadurch springt das Layout nicht, wenn eine Meldung erscheint.
 */
 #message-container {
     background-color: #ffffff;
     color: #143625;
-    padding: 10px 12px;
+    padding: 4px 12px;
     border-radius: 6px;
     font-weight: bold;
     font-size: 0.8rem;
-    height: 32px;              /* Feste Höhe reserviert den Platz permanent */
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     text-align: center;
     flex-shrink: 0;
     opacity: 1;
-    transition: opacity 0.2s ease; /* Weiches Ein- und Ausblenden */
+    transition: opacity 0.2s ease;
+    margin: 4px 0;
 }
 
-/* 
-  WICHTIG: Statt display: none nutzen wir opacity: 0. 
-  Das Element ist unsichtbar und nicht klickbar, aber der Platz bleibt exakt erhalten!
-*/
+/* Unsichtbarer Zustand (nimmt trotzdem weiterhin den reservierten Platz ein) */
 #message-container.hidden {
     opacity: 0;
-    pointer-events: none;      /* Verhindert Klicks auf das unsichtbare Feld */
+    pointer-events: none;      /* Macht das unsichtbare Feld unklickbar */
 }
 
 /* 
-  SPIELFELD-GRID (Dynamisch)
-  Passt sich dem verfügbaren Platz an.
+  SPIELFELD-GRID (DER FIX):
+  Durch 'height: min(48dvh, 72vw)' bekommt das Grid sofort eine feste Größe –
+  egal ob auf dem Handy (dvh limitiert) oder am PC (vw/Container limitiert).
+  'aspect-ratio: 5 / 6' berechnet daraus automatisch die exakte Breite für 5 Spalten und 6 Zeilen!
 */
 #board {
     display: grid;
     grid-template-rows: repeat(6, 1fr);
-    grid-gap: min(1.5vh, 8px);  /* Abstand wächst/schmälert sich dynamisch mit der Höhe */
-    margin: auto 0;            /* Zentriert das Spielfeld perfekt im verbleibenden Freiraum */
+    grid-gap: clamp(4px, 0.8dvh, 8px);
+    height: min(48dvh, 72vw);  /* Feste, dynamische Höhe verhindert das Schrumpfen im leeren Zustand */
+    aspect-ratio: 5 / 6;       /* Sorgt dafür, dass jede Kachel quadratisch bleibt */
+    margin: auto 0;            /* Zentriert das Spielfeld vertikal im freien Platz */
 }
 
+/* Einzelne Zeile im Spielfeld (5 gleich breite Spalten) */
 .row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-gap: min(1.5vw, 8px);  /* Abstand wächst/schmälert sich dynamisch mit der Breite */
+    grid-gap: clamp(4px, 0.8dvh, 8px);
 }
 
 /* 
-  EINZELNE KACHELN (Dynamisch)
-  Verwendet min(12vw, 52px): Auf schmalen Handys schrumpfen sie, 
-  auf Tablets/Laptops werden sie bis zu 52px groß, sprengen aber nie den Rahmen.
+  EINZELNE KACHEL:
+  Füllt ihre Grid-Zelle komplett aus und skaliert die Buchstaben proportional mit.
 */
 .tile {
-    width: min(13vw, 52px);
-    height: min(13vw, 52px);
+    width: 100%;
+    height: 100%;
     border: 2px solid var(--tile-border);
     background-color: rgba(20, 54, 37, 0.85);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: clamp(1.1rem, 5vw, 1.7rem); /* Buchstabengröße skaliert fließend mit */
+    font-size: clamp(1.1rem, 3.8dvh, 1.8rem);
     font-weight: bold;
     text-transform: uppercase;
     user-select: none;
     transition: transform 0.2s, background-color 0.4s;
+    border-radius: 4px;
 }
 
-/* Status-Farben */
+/* Status-Farben nach dem Absenden eines Wortes */
 .correct {
     background-color: var(--color-correct) !important;
     border-color: var(--color-correct) !important;
@@ -146,44 +153,46 @@ header h1 {
     border-color: var(--color-absent) !important;
 }
 
-/* TASTATUR (Dynamisch) */
+/* BILDSCHIRMTASTATUR */
 #keyboard {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: min(1vh, 6px);
-    flex-shrink: 0;
-    margin-bottom: 1vh;
+    gap: clamp(4px, 0.7dvh, 6px);
+    flex-shrink: 0;            /* Tastatur wird niemals zusammengedrückt */
 }
 
+/* Eine Tastenreihe */
 .keyboard-row {
     display: flex;
     justify-content: center;
-    gap: min(1vw, 5px);
+    gap: clamp(3px, 0.8vw, 5px);
 }
 
-/* Tasten skaliert */
+/* Einzelne Taste auf der Tastatur */
 button {
     font-family: inherit;
     font-weight: bold;
     border: 0;
     padding: 0;
-    height: min(6vh, 48px);    /* Tastengröße passt sich der Bildschirmhöhe an */
+    height: clamp(38px, 5.5dvh, 48px); /* Dynamische Höhe für Handy & PC */
     border-radius: 4px;
     cursor: pointer;
     background-color: var(--key-bg);
     color: var(--text-color);
     flex: 1;
-    max-width: 42px;
-    font-size: clamp(0.7rem, 2.5vw, 0.95rem);
+    max-width: 40px;
+    font-size: clamp(0.7rem, 2.2vw, 0.9rem);
     user-select: none;
 }
 
+/* Breitere Tasten für ENTER und Backspace */
 button.wide-key {
-    max-width: 65px;
-    font-size: clamp(0.55rem, 2vw, 0.75rem);
+    max-width: 62px;
+    font-size: clamp(0.55rem, 1.6vw, 0.7rem);
 }
 
+/* Visuelles Feedback beim Antippen */
 button:active {
     opacity: 0.8;
 }

@@ -1,22 +1,25 @@
+/* Globale Variablen für Farben */
 :root {
     --bg-color: #143625;       /* Weihnachtliches Tannengrün */
-    --tile-border: #3a634e;
-    --text-color: #ffffff;
-    --gold-accent: #e5c158;
+    --tile-border: #3a634e;    /* Randfarbe der leeren Kacheln */
+    --text-color: #ffffff;     /* Weißer Text */
+    --gold-accent: #e5c158;    /* Goldton für den Titel */
     
-    /* Deine gewünschten Buchstabenfarben */
-    --color-correct: #538d4e;  /* Klassisches Grün */
-    --color-present: #b8ae1d;  /* Weihnachtliches Rot (statt Gelb) */
-    --color-absent: #3a3a3c;   /* Klassisches Grau */
-    --key-bg: #818384;
+    /* Status-Farben */
+    --color-correct: #538d4e;  /* Grün */
+    --color-present: #e5c158;  /* Rot (ersetzt Gelb) */
+    --color-absent: #505050;   /* Grau */
+    --key-bg: #818384;         /* Tastatur-Hintergrund */
 }
 
+/* Reset: Abstände vereinheitlichen */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+/* Body: Füllt exakt den Bildschirm aus, verhindert horizontales Scrollen */
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
@@ -24,139 +27,110 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-}
-
-/* --- Polaroid Hintergrund --- */
-.polaroid-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; /* Damit man nicht aus Versehen darauf klickt */
-    z-index: 0;
+    height: 100vh;
+    width: 100vw;
     overflow: hidden;
-}
-
-.polaroid {
-    position: absolute;
-    background: #ffffff;
-    padding: 10px 10px 25px 10px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-    color: #222;
-    font-family: 'Caveat', cursive;
-    font-size: 1.3rem;
-    text-align: center;
-    opacity: 0.35; /* Dezent im Hintergrund */
-    transition: opacity 0.3s;
-}
-
-.polaroid img {
-    width: 140px;
-    height: 140px;
-    object-fit: cover;
-    display: block;
-    margin-bottom: 5px;
-}
-
-/* Positionierung der Polaroids an den Rändern */
-.p1 { top: 5%; left: 4%; transform: rotate(-8deg); }
-.p2 { bottom: 8%; left: 5%; transform: rotate(6deg); }
-.p3 { top: 7%; right: 4%; transform: rotate(9deg); }
-.p4 { bottom: 6%; right: 5%; transform: rotate(-7deg); }
-
-/* Auf kleinen Handys Polaroids noch dezenter machen */
-@media (max-width: 768px) {
-    .polaroid {
-        opacity: 0.18;
-        transform: scale(0.75);
-    }
-    .p1 { top: -2%; left: -8%; transform: rotate(-8deg) scale(0.75); }
-    .p2 { bottom: -2%; left: -8%; transform: rotate(6deg) scale(0.75); }
-    .p3 { top: -2%; right: -8%; transform: rotate(9deg) scale(0.75); }
-    .p4 { bottom: -2%; right: -8%; transform: rotate(-7deg) scale(0.75); }
-}
-
-/* --- Spielfeld & Layout --- */
-.game-container {
     position: relative;
-    z-index: 1;
+}
+
+/* 
+  HAUPTCONTAINER (Dynamisch)
+  Nutzt nun min(95vw, 420px): Er nimmt auf kleinen Handys 95% der Bildschirmbreite ein, 
+  wächst aber auf größeren Geräten maximal bis zu 420px an.
+*/
+.game-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     height: 100vh;
-    max-height: 750px;
-    width: 100%;
-    max-width: 500px;
-    padding: 15px 10px;
+    max-height: 750px;         /* Hindert das Spiel daran, auf Riesen-Displays unendlich lang zu werden */
+    width: min(95vw, 420px);   /* Dynamische Breite je nach Bildschirm */
+    padding: 2vh 2vw;          /* Dynamische Innenabstände basierend auf Bildschirmgröße */
 }
 
+/* Kopfbereich */
 header {
     text-align: center;
+    flex-shrink: 0;
 }
 
 header h1 {
-    font-size: 1.6rem;
+    font-size: clamp(1rem, 4vw, 1.5rem); /* Schriftgröße skaliert fließend mit der Bildschirmgröße */
     color: var(--gold-accent);
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
-#day-subtitle {
-    font-size: 0.95rem;
-    color: #cde0d5;
-    margin-top: 4px;
-}
-
+/* 
+  NACHRICHTENZENTRALE (Fester Platzhalter)
+  Hat eine feste Höhe, damit der Platz immer reserviert ist.
+  Dadurch verschiebt sich beim Einblenden absolut gar nichts mehr!
+*/
 #message-container {
     background-color: #ffffff;
     color: #143625;
-    padding: 10px 20px;
-    border-radius: 8px;
+    padding: 10px 12px;
+    border-radius: 6px;
     font-weight: bold;
-    position: absolute;
-    top: 75px;
-    z-index: 10;
+    font-size: 0.8rem;
+    height: 32px;              /* Feste Höhe reserviert den Platz permanent */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    text-align: center;
+    flex-shrink: 0;
+    opacity: 1;
+    transition: opacity 0.2s ease; /* Weiches Ein- und Ausblenden */
 }
 
-.hidden {
-    display: none;
+/* 
+  WICHTIG: Statt display: none nutzen wir opacity: 0. 
+  Das Element ist unsichtbar und nicht klickbar, aber der Platz bleibt exakt erhalten!
+*/
+#message-container.hidden {
+    opacity: 0;
+    pointer-events: none;      /* Verhindert Klicks auf das unsichtbare Feld */
 }
 
-/* 6x5 Raster */
+/* 
+  SPIELFELD-GRID (Dynamisch)
+  Passt sich dem verfügbaren Platz an.
+*/
 #board {
     display: grid;
     grid-template-rows: repeat(6, 1fr);
-    grid-gap: 6px;
-    margin: 10px 0;
+    grid-gap: min(1.5vh, 8px);  /* Abstand wächst/schmälert sich dynamisch mit der Höhe */
+    margin: auto 0;            /* Zentriert das Spielfeld perfekt im verbleibenden Freiraum */
 }
 
 .row {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-gap: 6px;
+    grid-gap: min(1.5vw, 8px);  /* Abstand wächst/schmälert sich dynamisch mit der Breite */
 }
 
+/* 
+  EINZELNE KACHELN (Dynamisch)
+  Verwendet min(12vw, 52px): Auf schmalen Handys schrumpfen sie, 
+  auf Tablets/Laptops werden sie bis zu 52px groß, sprengen aber nie den Rahmen.
+*/
 .tile {
-    width: 54px;
-    height: 54px;
+    width: min(13vw, 52px);
+    height: min(13vw, 52px);
     border: 2px solid var(--tile-border);
     background-color: rgba(20, 54, 37, 0.85);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.8rem;
+    font-size: clamp(1.1rem, 5vw, 1.7rem); /* Buchstabengröße skaliert fließend mit */
     font-weight: bold;
     text-transform: uppercase;
     user-select: none;
     transition: transform 0.2s, background-color 0.4s;
 }
 
-/* Statusfarben für Kacheln und Tasten */
+/* Status-Farben */
 .correct {
     background-color: var(--color-correct) !important;
     border-color: var(--color-correct) !important;
@@ -172,39 +146,42 @@ header h1 {
     border-color: var(--color-absent) !important;
 }
 
-/* --- Tastatur --- */
+/* TASTATUR (Dynamisch) */
 #keyboard {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: min(1vh, 6px);
+    flex-shrink: 0;
+    margin-bottom: 1vh;
 }
 
 .keyboard-row {
     display: flex;
     justify-content: center;
-    gap: 4px;
+    gap: min(1vw, 5px);
 }
 
+/* Tasten skaliert */
 button {
     font-family: inherit;
     font-weight: bold;
     border: 0;
     padding: 0;
-    height: 50px;
+    height: min(6vh, 48px);    /* Tastengröße passt sich der Bildschirmhöhe an */
     border-radius: 4px;
     cursor: pointer;
     background-color: var(--key-bg);
     color: var(--text-color);
     flex: 1;
     max-width: 42px;
-    font-size: 0.95rem;
+    font-size: clamp(0.7rem, 2.5vw, 0.95rem);
     user-select: none;
 }
 
 button.wide-key {
     max-width: 65px;
-    font-size: 0.75rem;
+    font-size: clamp(0.55rem, 2vw, 0.75rem);
 }
 
 button:active {

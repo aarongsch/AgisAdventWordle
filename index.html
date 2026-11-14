@@ -1,49 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Zeichensatz und Viewport-Einstellungen für optimale Handydarstellung (verhindert unabsichtliches Zoomen) -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Christmas Wordle</title>
+    <!-- Verknüpfung zur externen CSS-Design-Datei -->
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts Schriftart einbinden -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Polaroid Hintergrund-Bilder (Platzhalter) -->
-    <div class="polaroid-container">
-        <div class="polaroid p1">
-            <img src="https://placehold.co/200x200/eee/333?text=Foto+1" alt="Erinnerung 1">
-            <p>Wir zwei ❤️</p>
-        </div>
-        <div class="polaroid p2">
-            <img src="https://placehold.co/200x200/eee/333?text=Foto+2" alt="Erinnerung 2">
-            <p>Winter-Spaziergang</p>
-        </div>
-        <div class="polaroid p3">
-            <img src="https://placehold.co/200x200/eee/333?text=Foto+3" alt="Erinnerung 3">
-            <p>Urlaub ✨</p>
-        </div>
-        <div class="polaroid p4">
-            <img src="https://placehold.co/200x200/eee/333?text=Foto+4" alt="Erinnerung 4">
-            <p>Lieblingsmensch</p>
-        </div>
-    </div>
-
-    <!-- Hauptbereich des Spiels -->
+    <!-- Hauptcontainer, der das gesamte Spiel zentriert und strukturiert -->
     <main class="game-container">
+        
+        <!-- Kopfbereich mit dem Haupttitel (Untertitel wurde entfernt) -->
         <header>
-            <h1>🎄 Advent Wordle 🎄</h1>
-            <p id="day-subtitle">Türchen #1</p>
+            <h1>🎄 Christmas Wordle 🎄</h1>
         </header>
 
-        <!-- Nachrichtensystem (Gewonnen / Verloren / Zu kurz) -->
+        <!-- Container für Benachrichtigungen (z.B. "Not enough letters!" oder Sieg-Nachricht) -->
         <div id="message-container" class="hidden"></div>
 
-        <!-- 6x5 Spielfeld -->
+        <!-- Das 6x5 Spielfeld für die Rateversuche (wird via JavaScript befüllt) -->
         <div id="board"></div>
 
-        <!-- Bildschirmtastatur -->
+        <!-- Virtuelle Bildschirmtastatur für die komfortable Bedienung auf dem Handy -->
         <div id="keyboard">
+            <!-- Erste Tastenreihe (Q bis P) -->
             <div class="keyboard-row">
                 <button data-key="Q">Q</button>
                 <button data-key="W">W</button>
@@ -56,6 +41,7 @@
                 <button data-key="O">O</button>
                 <button data-key="P">P</button>
             </div>
+            <!-- Zweite Tastenreihe (A bis L) -->
             <div class="keyboard-row">
                 <button data-key="A">A</button>
                 <button data-key="S">S</button>
@@ -67,6 +53,7 @@
                 <button data-key="K">K</button>
                 <button data-key="L">L</button>
             </div>
+            <!-- Dritte Tastenreihe mit ENTER, Buchstaben Z-M und Backspace (⌫) -->
             <div class="keyboard-row">
                 <button data-key="ENTER" class="wide-key">ENTER</button>
                 <button data-key="Z">Z</button>
@@ -81,6 +68,7 @@
         </div>
     </main>
 
+    <!-- Verknüpfung zur JavaScript-Logikdatei -->
     <script src="script.js"></script>
 </body>
 </html>

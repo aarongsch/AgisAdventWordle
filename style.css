@@ -23,7 +23,7 @@
     --gold-accent: #e5c158;      /* Goldton der Überschrift. Einstellbar: Hex-Farbcode */
 
     --color-correct: #538d4e;    /* Grün: richtiger Buchstabe an richtiger Stelle. Einstellbar: Hex-Farbcode */
-    --color-present: #c93b3b;    /* Rot: Buchstabe kommt vor, aber an anderer Stelle. Einstellbar: Hex-Farbcode */
+    --color-present: #e5c158;    /* Gelb/Gold: Buchstabe kommt vor, aber an anderer Stelle. Einstellbar: Hex-Farbcode */
     --color-absent: #3a3a3c;     /* Grau: Buchstabe kommt nicht im Wort vor. Einstellbar: Hex-Farbcode */
     --key-bg: #818384;           /* Tastenfarbe der Bildschirmtastatur (unbenutzt). Einstellbar: Hex-Farbcode */
 }
@@ -211,7 +211,7 @@ header h1 {                      /* Der Titeltext selbst */
 }
 
 .present {                       /* Kachel/Taste: Buchstabe kommt vor, aber an falscher Stelle */
-    background-color: var(--color-present) !important; /* Rot */
+    background-color: var(--color-present) !important; /* Gelb/Gold */
     border-color: var(--color-present) !important; /* Rahmen in derselben Farbe */
 }
 

@@ -100,7 +100,7 @@ function submitGuess() {
         }
     }
 
-    /* 2. Durchgang: Nach Buchstaben an falscher Stelle suchen (Rot / present) */
+    /* 2. Durchgang: Nach Buchstaben an falscher Stelle suchen (Gelb/Gold / present) */
     for (let i = 0; i < COLS; i++) {
         if (statuses[i] !== "correct" && targetArray.includes(guessArray[i])) {
             statuses[i] = "present";
@@ -134,7 +134,7 @@ function submitGuess() {
     }
 }
 
-/* Funktion: Färbt die Tasten auf der Bildschirmtastatur ein (Grün hat Vorrang vor Rot, Rot vor Grau) */
+/* Funktion: Färbt die Tasten auf der Bildschirmtastatur ein (Grün hat Vorrang vor Gelb/Gold, Gelb/Gold vor Grau) */
 function updateKeyboardColor(letter, status) {
     const key = document.querySelector(`button[data-key="${letter}"]`);
     if (!key) return;

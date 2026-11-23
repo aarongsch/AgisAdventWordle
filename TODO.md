@@ -59,7 +59,7 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [ ] Eigene Startnachricht pro Tag, die beim Öffnen des Wordles angezeigt wird
 - [ ] Nachricht nach jedem Versuch: zufällig aus einem Pool motivierender Nachrichten gewählt (unabhängig von der Anzahl grüner/gelber Buchstaben), im Code einstellbar
 - [ ] Sondernachrichten: letzter Versuch, Sieg (gern abhängig von der Anzahl der Versuche), Niederlage
-- [ ] Das Popup kann auch längere Nachrichten zeigen (Zeilenumbruch statt abgeschnitten)
+- [x] Das Popup kann auch längere Nachrichten zeigen (2 Zeilen, gleiche Breite wie das Raster)
 - [ ] Optional: mehrere Pools je nach Fortschritt (Anzahl grüner/gelber Buchstaben), aus denen jeweils zufällig gewählt wird
 
 ### Bonusversuch (versteckte 7. Reihe)

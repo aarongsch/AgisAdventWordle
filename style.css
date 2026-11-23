@@ -51,7 +51,7 @@
 
     /* ---- Größe der festen Blöcke ---- */
     --header-h: clamp(28px, calc(4.5 * var(--vh)), 40px); /* Höhe des Titelbereichs. Einstellbar: Minimum 28px, Wunschwert 4.5% der Höhe, Maximum 40px */
-    --msg-h: 32px;               /* Höhe des Popups (reserviert, damit nichts springt). Einstellbar: Pixelwert, z.B. 36px für größeres Popup */
+    --msg-h: 50px;               /* Höhe des Popups (reserviert, damit nichts springt). 50px = Platz für 2 Textzeilen. Einstellbar: Pixelwert, z.B. 68px für 3 Zeilen */
 
     /* ---- Tastatur ---- */
     --key-h: clamp(40px, calc(6.2 * var(--vh)), 52px); /* Höhe einer Taste. Einstellbar: Minimum 40px (noch gut tippbar), Wunschwert 6.2% der Höhe, Maximum 52px */
@@ -69,6 +69,7 @@
     --board-h-avail: calc(var(--app-h) - 2 * var(--pad-y) - var(--header-h) - var(--msg-h) - var(--keyboard-h) - 3 * var(--gap)); /* Höhe, die für das Raster übrig bleibt: Bildschirm minus Ränder, Titel, Popup, Tastatur, 3 Lücken */
     --tile-by-height: calc((var(--board-h-avail) - 5 * var(--tile-gap)) / 6); /* Kachelgröße, die in die HÖHE passt: (übrige Höhe - 5 Lücken) / 6 Zeilen */
     --tile-size: clamp(var(--tile-min), min(var(--tile-by-width), var(--tile-by-height)), var(--tile-max)); /* Endgültige Kachelgröße: der kleinere der beiden Werte, begrenzt durch Min und Max */
+    --board-w: calc(5 * var(--tile-size) + 4 * var(--tile-gap)); /* Endgültige Rasterbreite = 5 Kacheln + 4 Lücken */
 }
 
 /* Moderne Handy-Browser: "dvh" berücksichtigt die ein-/ausfahrende Adressleiste */
@@ -151,12 +152,13 @@ header h1 {                      /* Der Titeltext selbst */
     background-color: #ffffff;   /* Hintergrundfarbe des Popups. Einstellbar: Hex-Farbcode */
     color: #143625;              /* Textfarbe im Popup. Einstellbar: Hex-Farbcode */
     height: var(--msg-h);        /* Feste Höhe (aus Abschnitt 2), damit beim Ein-/Ausblenden nichts springt */
-    max-width: 100%;             /* Popup wird nie breiter als der Spielbereich */
-    padding: 0 14px;             /* Innenabstand links/rechts im Popup. Einstellbar: Pixelwert */
+    width: var(--board-w);       /* Breite des Popups (aus Abschnitt 2) */
+    padding: 6px 14px;           /* Innenabstand im Popup: 6px oben/unten, 14px links/rechts. Einstellbar: Pixelwerte */
     border-radius: 6px;          /* Rundung der Ecken. Einstellbar: 0 = eckig, 16px = sehr rund */
     font-weight: bold;           /* Fettdruck. Einstellbar: normal oder bold */
     font-size: clamp(0.75rem, 3.2vw, 0.9rem); /* Schriftgröße. Einstellbar: Minimum 0.75rem, 3.2vw = 3.2% der Breite, Maximum 0.9rem */
-    white-space: nowrap;         /* Text bleibt in einer Zeile (Höhe ist fest). Nicht ändern */
+    white-space: normal;         /* Text darf in mehrere Zeilen umbrechen (Höhe für 2 Zeilen über --msg-h) */
+    line-height: 1.25;           /* Zeilenhöhe = 125% der Schriftgröße. Einstellbar: 1 = eng, 1.5 = luftig */
     display: flex;               /* Flexbox zum Zentrieren des Textes */
     align-items: center;         /* Text senkrecht mittig */
     justify-content: center;     /* Text waagerecht mittig */

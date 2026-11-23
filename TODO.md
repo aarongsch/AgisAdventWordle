@@ -46,7 +46,9 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [ ] Prüfen, dass jeder Link auf dem Handy über GitHub Pages funktioniert
 
 ### Spielstand
-- [ ] Spielstand pro Tag speichern (Versuche, Farben, Tastatur, Sieg/Niederlage), damit Neuladen nichts zurücksetzt
+- [x] Spielstand pro Tag speichern (Versuche, Farben, Tastatur, Sieg/Niederlage), damit Neuladen nichts zurücksetzt
+- [x] Zum Testen: `&reset` an den Link hängen löscht den gespeicherten Stand dieses Tages
+- [x] Wird das Wort eines Tages im Code geändert, startet dieser Tag automatisch neu
 
 ### Wortprüfung
 - [ ] Nur echte englische Wörter mit 5 Buchstaben als Versuch zulassen (frei verfügbare Wortliste)

@@ -28,6 +28,57 @@ let currentRow = 0;        // Zeigt an, in welcher Zeile gerade getippt wird
 let currentCol = 0;        // Zeigt an, in welcher Spalte der nächste Buchstabe landet
 let currentGuess = "";     // Speichert das aktuell eingegebene Wort als Textstring
 let isGameOver = false;    // Statusvariable: True, wenn das Spiel gewonnen oder verloren ist
+let savedGuesses = [];     // Alle bereits abgeschickten Versuche (werden im Handy-Speicher gesichert)
+
+/* ==========================================================================
+   SPIELSTAND SPEICHERN
+   Jeder abgeschickte Versuch wird im Speicher des Browsers auf dem Handy
+   abgelegt ("localStorage"), getrennt für jeden Tag. Beim Neuladen der Seite
+   werden die Versuche wiederhergestellt, inklusive Farben und Tastatur.
+   - Wird das Wort eines Tages im Code geändert, startet dieser Tag neu.
+   - Zum Testen: "&reset" an den Link hängen (z. B. "?day=3&reset"), dann
+     wird der gespeicherte Stand dieses Tages gelöscht.
+   ========================================================================== */
+const STORAGE_KEY = `agis-wordle-day-${currentDay}`; // Name des Speicherplatzes, z. B. "agis-wordle-day-3"
+
+/* Funktion: Speichert das Zielwort und alle bisherigen Versuche */
+function saveState() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ word: targetWord, guesses: savedGuesses }));
+    } catch (e) {
+        // Speichern nicht möglich (z. B. privater Modus) – das Spiel funktioniert trotzdem, nur ohne Speichern
+    }
+}
+
+/* Funktion: Lädt die gespeicherten Versuche (leere Liste, wenn nichts gespeichert ist) */
+function loadState() {
+    try {
+        if (urlParams.has("reset")) {
+            localStorage.removeItem(STORAGE_KEY);
+            // "reset" aus der Adresszeile entfernen, damit nicht jedes Neuladen wieder alles löscht
+            urlParams.delete("reset");
+            history.replaceState(null, "", `${location.pathname}?${urlParams}`);
+            return [];
+        }
+        const state = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        // Nur übernehmen, wenn der Stand zum aktuellen Wort passt
+        if (state && state.word === targetWord && Array.isArray(state.guesses)) {
+            return state.guesses.filter(g => typeof g === "string" && /^[A-Z]{5}$/.test(g));
+        }
+    } catch (e) {
+        // Fehlerhafter oder nicht lesbarer Speicher – einfach neu starten
+    }
+    return [];
+}
+
+/* Funktion: Spielt alle gespeicherten Versuche noch einmal ab (ohne sie erneut zu speichern) */
+function restoreState() {
+    savedGuesses = loadState();
+    for (const guess of savedGuesses) {
+        if (isGameOver) break;
+        applyGuess(guess);
+    }
+}
 
 /* HTML-Elemente für das Spielfeld und die Nachrichtenbox im Code verfügbar machen */
 const board = document.getElementById("board");
@@ -88,8 +139,17 @@ function submitGuess() {
         return;
     }
 
+    /* Versuch merken und sofort im Handy-Speicher sichern, dann auswerten */
+    savedGuesses.push(currentGuess);
+    saveState();
+    applyGuess(currentGuess);
+}
+
+/* Funktion: Wertet einen Versuch aus, färbt die Zeile und prüft auf Sieg oder Niederlage.
+   Wird beim normalen Spielen UND beim Wiederherstellen des Spielstands benutzt. */
+function applyGuess(guess) {
     const targetArray = targetWord.split("");
-    const guessArray = currentGuess.split("");
+    const guessArray = guess.split("");
     const statuses = Array(COLS).fill("absent"); // Standardmäßig alles grau markieren
 
     /* 1. Durchgang: Nach exakten Treffern suchen (Grün / correct) */
@@ -108,15 +168,16 @@ function submitGuess() {
         }
     }
 
-    /* Kacheln im Spielfeld und Tasten auf der Bildschirmtastatur entsprechend färben */
+    /* Kacheln im Spielfeld beschriften und färben, Tasten auf der Bildschirmtastatur entsprechend färben */
     for (let i = 0; i < COLS; i++) {
         const tile = document.getElementById(`tile-${currentRow}-${i}`);
+        tile.textContent = guessArray[i]; // nötig beim Wiederherstellen, da die Kachel dann noch leer ist
         tile.classList.add(statuses[i]);
         updateKeyboardColor(guessArray[i], statuses[i]);
     }
 
     /* Prüfen, ob das Spiel gewonnen wurde (Wort erraten) */
-    if (currentGuess === targetWord) {
+    if (guess === targetWord) {
         showMessage("🎄 Amazing! You solved it! ❤️", true);
         isGameOver = true;
         return;
@@ -181,5 +242,6 @@ function handleInput(key) {
     }
 }
 
-/* Spiel initialisieren: Das leere Spielfeld aufbauen */
+/* Spiel initialisieren: Das leere Spielfeld aufbauen und gespeicherten Spielstand wiederherstellen */
 initBoard();
+restoreState();

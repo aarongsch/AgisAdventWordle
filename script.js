@@ -1,25 +1,11 @@
-/* 
-  WÖRTER-LISTE FÜR DEN ADVENTSKALENDER 
-  Die Zahlen links entsprechen dem URL-Parameter (?day=1, ?day=3 etc.).
-  Du kannst hier ganz einfach deine eigenen 5-Buchstaben-Wörter eintragen.
-*/
-const WORDS_BY_DAY = {
-    1: "HEART",
-    3: "SNOWY",
-    5: "ANGEL",
-    8: "LIGHT",
-    12: "SANTA",
-    15: "MAGIC",
-    20: "SWEET",
-    24: "LOVED"
-};
-
 /* URL-Parameter auslesen (z. B. "?day=3"), um das richtige Wort für den jeweiligen Tag zu laden */
 const urlParams = new URLSearchParams(window.location.search);
 const currentDay = parseInt(urlParams.get('day')) || 1;
 
-/* Zielwort für den aktuellen Tag ermitteln (Fallback auf Tag 1, falls der Parameter fehlt) */
-const targetWord = WORDS_BY_DAY[currentDay] || Object.values(WORDS_BY_DAY)[0];
+/* Daten des aktuellen Tages (Wort und Startnachricht) aus DAYS in config.js holen.
+   Gibt es den Tag dort nicht, wird der erste Tag der Liste genommen */
+const today = DAYS[currentDay] || Object.values(DAYS)[0];
+const targetWord = today.word;
 
 /* Spielregeln-Konstanten: 6 Versuche (Zeilen) und 5 Buchstaben pro Wort (Spalten) */
 const ROWS = 6;

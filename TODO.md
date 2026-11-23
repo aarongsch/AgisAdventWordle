@@ -16,7 +16,7 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [x] Nach Sieg oder Niederlage ist keine Eingabe mehr möglich
 
 ### Wort pro Tag (Grundlage für die QR-Codes)
-- [x] Wörter je Tag in `WORDS_BY_DAY` in `script.js` hinterlegt (nur für einzelne Tage: 1, 3, 5, 8, 12, 15, 20, 24)
+- [x] Wörter (und Startnachrichten) je Tag in `DAYS` in `config.js` hinterlegt (nur für einzelne Tage: 1, 3, 5, 8, 12, 15, 20, 24)
 - [x] Das Wort wird über den URL-Parameter `?day=N` gewählt
 - [x] Fehlt der Tag oder ist er ungültig, wird das Wort von Tag 1 genommen
 

@@ -20,8 +20,8 @@
             <h1>🎄 Christmas Wordle 🎄</h1>
         </header>
 
-        <!-- Container für Benachrichtigungen (z.B. "Not enough letters!" oder Sieg-Nachricht) -->
-        <div id="message-container" class="hidden"></div>
+        <!-- Container für Nachrichten (z.B. Sieg-Nachricht). Muss im HTML leer bleiben (auch ohne Leerzeichen), sonst greift das automatische Ausblenden (:empty) in style.css nicht -->
+        <div id="message-container"></div>
 
         <!-- Das 6x5 Spielfeld für die Rateversuche (wird via JavaScript befüllt) -->
         <div id="board"></div>

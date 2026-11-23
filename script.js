@@ -99,16 +99,9 @@ function initBoard() {
     }
 }
 
-/* Funktion: Zeigt kurze Statusmeldungen auf dem Bildschirm an */
-function showMessage(msg, persistent = false) {
+/* Funktion: Zeigt eine Nachricht im Popup an. Sie bleibt stehen, bis die nächste Nachricht sie ersetzt */
+function showMessage(msg) {
     messageContainer.textContent = msg;
-    messageContainer.classList.remove("hidden");
-    if (!persistent) {
-        // Nachricht nach 2 Sekunden automatisch wieder ausblenden
-        setTimeout(() => {
-            messageContainer.classList.add("hidden");
-        }, 2000);
-    }
 }
 
 /* Funktion: Fügt einen getippten Buchstaben in die aktuelle Kachel ein */
@@ -129,13 +122,23 @@ function deleteLetter() {
     currentGuess = currentGuess.slice(0, -1);
 }
 
+/* Funktion: Lässt die aktuelle Zeile kurz wackeln (Animation steht in style.css unter "shake").
+   Die Klasse wird nach der Animation wieder entfernt, damit die Zeile beim nächsten Mal erneut wackeln kann */
+function shakeRow() {
+    const row = board.children[currentRow];
+    row.classList.add("shake");
+    row.addEventListener("animationend", () => {
+        row.classList.remove("shake");
+    }, { once: true });
+}
+
 /* Funktion: Überprüft das eingegebene Wort nach dem Drücken von ENTER */
 function submitGuess() {
     if (isGameOver) return;
     
     // Prüfen, ob die Zeile komplett mit 5 Buchstaben gefüllt ist
     if (currentGuess.length < COLS) {
-        showMessage("Not enough letters!");
+        shakeRow();
         return;
     }
 
@@ -178,7 +181,7 @@ function applyGuess(guess) {
 
     /* Prüfen, ob das Spiel gewonnen wurde (Wort erraten) */
     if (guess === targetWord) {
-        showMessage("🎄 Amazing! You solved it! ❤️", true);
+        showMessage("🎄 Amazing! You solved it! ❤️");
         isGameOver = true;
         return;
     }
@@ -190,7 +193,7 @@ function applyGuess(guess) {
 
     /* Prüfen, ob alle 6 Versuche aufgebraucht sind (Spiel verloren) */
     if (currentRow >= ROWS) {
-        showMessage(`The word was: ${targetWord}`, true);
+        showMessage(`The word was: ${targetWord}`);
         isGameOver = true;
     }
 }

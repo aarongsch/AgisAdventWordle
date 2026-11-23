@@ -10,7 +10,7 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [x] Auswertung jedes Versuchs mit korrekter Behandlung doppelter Buchstaben (erst die exakten Treffer, dann die Buchstaben an falscher Stelle)
 - [x] Farben: Grün = richtige Stelle, Gelb/Gold = kommt im Wort vor, aber an anderer Stelle, Grau = kommt nicht vor
 - [x] Die Tasten der Bildschirmtastatur werden mit eingefärbt (Grün schlägt Gelb, Gelb schlägt Grau)
-- [x] Meldung „Not enough letters!“, wenn ein Wort zu kurz abgeschickt wird (verschwindet nach 2 Sekunden)
+- [x] Zu kurzes Wort: Die Zeile wackelt (Shake-Animation)
 - [x] Siegesmeldung „🎄 Amazing! You solved it! ❤️“, bleibt stehen
 - [x] Nach 6 Fehlversuchen wird das Lösungswort angezeigt
 - [x] Nach Sieg oder Niederlage ist keine Eingabe mehr möglich
@@ -70,7 +70,9 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [ ] Der Bonusversuch wird im gespeicherten Spielstand berücksichtigt
 
 ### Verbesserungen am bestehenden Code
-- [ ] Bug: Eine alte Meldung kann eine neue zu früh ausblenden (Timer wird nicht zurückgesetzt), z. B. verschwindet die Siegesmeldung
+- [x] Bug behoben: Eine alte Meldung konnte eine neue zu früh ausblenden → Timer entfernt, jede Nachricht bleibt stehen, bis eine neue sie ablöst
 - [x] Kommentare von „Rot“ auf „Gelb/Gold“ angepasst (`style.css`, `script.js`)
+- [x] Zu kurzes Wort: Zeile wackelt (Shake-Animation) statt Meldung „Not enough letters!“
+- [x] Nachrichtenfeld nicht mehr per Klasse `hidden` steuern, sondern automatisch ausblenden, solange es leer ist (`:empty`)
 - [ ] Optional: Lesbarkeit prüfen – weiße Schrift auf hellem Gold ist evtl. schwer zu lesen (dunklere Schrift oder dunkleres Gold)
 - [ ] Optional: Animation beim Aufdecken der Buchstaben und beim Sieg

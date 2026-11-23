@@ -145,7 +145,7 @@ header h1 {                      /* Der Titeltext selbst */
 
 
 /* ==========================================================================
-   7. NACHRICHTEN-CONTAINER (Popup für Fehler und Sieg)
+   7. NACHRICHTEN-CONTAINER (Popup für Spielnachrichten, z.B. Sieg oder Niederlage)
    ========================================================================== */
 #message-container {             /* Das Popup-Feld */
     background-color: #ffffff;   /* Hintergrundfarbe des Popups. Einstellbar: Hex-Farbcode */
@@ -167,7 +167,7 @@ header h1 {                      /* Der Titeltext selbst */
     transition: opacity 0.2s ease; /* Weiches Ein-/Ausblenden. Einstellbar: Dauer, z.B. 0.5s = langsamer */
 }
 
-#message-container.hidden {      /* Zustand, wenn keine Nachricht angezeigt wird */
+#message-container:empty {       /* Greift automatisch, solange das Feld leer ist (keine Nachricht). Achtung: schon ein Leerzeichen im HTML zählt als Inhalt */
     opacity: 0;                  /* Unsichtbar, belegt aber weiterhin den Platz im Layout */
     pointer-events: none;        /* Unsichtbares Feld ist nicht klickbar */
 }
@@ -218,6 +218,16 @@ header h1 {                      /* Der Titeltext selbst */
 .absent {                        /* Kachel/Taste: Buchstabe kommt nicht vor */
     background-color: var(--color-absent) !important; /* Grau */
     border-color: var(--color-absent) !important; /* Rahmen in derselben Farbe */
+}
+
+@keyframes shake {               /* Wackel-Animation: Ablauf von 0% (Start) bis 100% (Ende) */
+    0%, 100% { transform: translateX(0); }     /* Start und Ende: Zeile an ihrem normalen Platz */
+    20%, 60% { transform: translateX(-6px); }  /* Ausschlag nach links. Einstellbar: Pixelwert, größer = stärkeres Wackeln */
+    40%, 80% { transform: translateX(6px); }   /* Ausschlag nach rechts. Einstellbar: Pixelwert (gleich groß wie links wählen) */
+}
+
+.row.shake {                     /* Zeile, die gerade wackeln soll (Klasse wird von shakeRow() in script.js gesetzt) */
+    animation: shake 0.4s;       /* Spielt die Animation "shake" einmal ab. Einstellbar: Dauer, z.B. 0.6s = langsamer */
 }
 
 

@@ -15,6 +15,7 @@ let currentCol = 0;        // Zeigt an, in welcher Spalte der nächste Buchstabe
 let currentGuess = "";     // Speichert das aktuell eingegebene Wort als Textstring
 let isGameOver = false;    // Statusvariable: True, wenn das Spiel gewonnen oder verloren ist
 let savedGuesses = [];     // Alle bereits abgeschickten Versuche (werden im Handy-Speicher gesichert)
+let lastRandomMessage = "";  // Zuletzt zufällig gewählte Nachricht, damit sie nicht direkt wiederholt wird
 
 /* ==========================================================================
    SPIELSTAND SPEICHERN
@@ -118,6 +119,17 @@ function shakeRow() {
     }, { once: true });
 }
 
+/* Funktion: Wählt eine zufällige Nachricht aus der übergebenen Liste.
+   Dieselbe Nachricht kommt nie zweimal direkt hintereinander (außer die Liste hat nur einen Eintrag) */
+function randomMessage(list) {
+    let randomIndex;
+    do {
+        randomIndex = Math.floor(Math.random() * list.length);
+    } while (list.length > 1 && list[randomIndex] === lastRandomMessage);
+    lastRandomMessage = list[randomIndex];
+    return list[randomIndex];
+}
+
 /* Funktion: Überprüft das eingegebene Wort nach dem Drücken von ENTER */
 function submitGuess() {
     if (isGameOver) return;
@@ -132,6 +144,28 @@ function submitGuess() {
     savedGuesses.push(currentGuess);
     saveState();
     applyGuess(currentGuess);
+}
+
+/* Funktion: Entscheidet, welche Nachricht nach einem Versuch im Popup erscheint, und gibt sie zurück.
+   Zeigt selbst nichts an und ändert nichts am Spiel. Wird aufgerufen, NACHDEM applyGuess den
+   Spielzustand (currentRow) aktualisiert hat. Die Texte stehen in config.js.
+   Reihenfolge der Prüfung ist wichtig: Sieg vor Niederlage vor letztem Versuch vor Aufmunterung. */
+function messageAfterGuess(guess) {
+    // Gewonnen: Bei einem Sieg wird currentRow nicht erhöht, ist also 0 beim 1. Versuch,
+    // 1 beim 2. Versuch usw. Das passt direkt als Position in WIN_MESSAGES
+    if (guess === targetWord) {
+        return WIN_MESSAGES[currentRow];
+    }
+    // Alle Zeilen aufgebraucht: verloren (wird mit dem Bonusversuch angepasst)
+    if (currentRow >= ROWS) {
+        return `The word was: ${targetWord}`;
+    }
+    // Nur noch eine Zeile übrig (nach dem 5. Versuch ist currentRow = 5 = ROWS - 1)
+    if (currentRow === ROWS - 1) {
+        return LAST_TRY_MESSAGE;
+    }
+    // Sonst: zufällige Aufmunterung
+    return randomMessage(ENCOURAGEMENTS);
 }
 
 /* Funktion: Wertet einen Versuch aus, färbt die Zeile und prüft auf Sieg oder Niederlage.
@@ -165,23 +199,23 @@ function applyGuess(guess) {
         updateKeyboardColor(guessArray[i], statuses[i]);
     }
 
-    /* Prüfen, ob das Spiel gewonnen wurde (Wort erraten) */
+    /* Spielzustand aktualisieren */
     if (guess === targetWord) {
-        showMessage("🎄 Amazing! You solved it! ❤️");
+        // Gewonnen: Spiel beenden (currentRow bleibt auf der Gewinnzeile stehen)
         isGameOver = true;
-        return;
+    } else {
+        // Nicht gewonnen: in die nächste Zeile springen
+        currentRow++;
+        currentCol = 0;
+        currentGuess = "";
+        // Alle Zeilen aufgebraucht: Spiel verloren
+        if (currentRow >= ROWS) {
+            isGameOver = true;
+        }
     }
 
-    /* In die nächste Zeile springen */
-    currentRow++;
-    currentCol = 0;
-    currentGuess = "";
-
-    /* Prüfen, ob alle 6 Versuche aufgebraucht sind (Spiel verloren) */
-    if (currentRow >= ROWS) {
-        showMessage(`The word was: ${targetWord}`);
-        isGameOver = true;
-    }
+    /* Passende Nachricht zum neuen Spielzustand anzeigen */
+    showMessage(messageAfterGuess(guess));
 }
 
 /* Funktion: Färbt die Tasten auf der Bildschirmtastatur ein (Grün hat Vorrang vor Gelb/Gold, Gelb/Gold vor Grau) */
@@ -231,6 +265,7 @@ function handleInput(key) {
     }
 }
 
-/* Spiel initialisieren: Das leere Spielfeld aufbauen und gespeicherten Spielstand wiederherstellen */
+/* Spiel initialisieren: Das leere Spielfeld aufbauen, Startnachricht anzeigen und gespeicherten Spielstand wiederherstellen */
 initBoard();
+showMessage(today.start);
 restoreState();

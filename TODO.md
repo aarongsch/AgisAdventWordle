@@ -56,9 +56,10 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [ ] Die eigenen Lösungswörter werden immer akzeptiert, auch wenn sie nicht in der Liste stehen
 
 ### Nachrichten im Popup
-- [ ] Eigene Startnachricht pro Tag, die beim Öffnen des Wordles angezeigt wird
-- [ ] Nachricht nach jedem Versuch: zufällig aus einem Pool motivierender Nachrichten gewählt (unabhängig von der Anzahl grüner/gelber Buchstaben), im Code einstellbar
-- [ ] Sondernachrichten: letzter Versuch, Sieg (gern abhängig von der Anzahl der Versuche), Niederlage
+- [x] Eigene Startnachricht pro Tag, die beim Öffnen des Wordles angezeigt wird
+- [x] Nachricht nach jedem Versuch: zufällig aus einem Pool motivierender Nachrichten gewählt (unabhängig von der Anzahl grüner/gelber Buchstaben), im Code einstellbar
+- [x] Sondernachrichten: Sieg (je nach Anzahl der Versuche, 7 Texte inkl. Bonusversuch) und „Last try“ nach dem 5. Fehlversuch
+- [ ] Startnachrichten, Aufmunterungen, Siegesnachrichten und „Last try“ mit echten Texten füllen (`config.js`)
 - [x] Das Popup kann auch längere Nachrichten zeigen (2 Zeilen, gleiche Breite wie das Raster)
 - [ ] Optional: mehrere Pools je nach Fortschritt (Anzahl grüner/gelber Buchstaben), aus denen jeweils zufällig gewählt wird
 
@@ -67,6 +68,7 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [ ] Nach dem 6. Fehlversuch öffnet sich ein Dialogfenster mit einer im Code einstellbaren Nachricht
 - [ ] Der Dialog hat 2 Buttons (Beschriftung im Code einstellbar), die beide dasselbe tun: Dialog schließen und die 7. Reihe einblenden
 - [ ] Danach kann man den Bonusversuch in Reihe 7 spielen; erst wenn auch der scheitert, gilt das Spiel als verloren
+- [ ] Eigene Niederlage-Nachricht in `config.js` (kommt erst nach dem gescheiterten Bonusversuch, ersetzt „The word was: …“)
 - [ ] Der Bonusversuch wird im gespeicherten Spielstand berücksichtigt
 
 ### Verbesserungen am bestehenden Code

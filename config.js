@@ -17,7 +17,7 @@
      dieses Tages neu.
    -------------------------------------------------------------------------- */
 const DAYS = {
-    1:  { word: "HEART", start: "..." },
+    1:  { word: "HEART", start: "Guten Morgen Sonnenschein!" },
     3:  { word: "SNOWY", start: "..." },
     5:  { word: "ANGEL", start: "..." },
     8:  { word: "LIGHT", start: "..." },
@@ -26,3 +26,44 @@ const DAYS = {
     20: { word: "SWEET", start: "..." },
     24: { word: "LOVED", start: "..." }
 };
+
+
+/* --------------------------------------------------------------------------
+   AUFMUNTERUNGEN: Nach jedem Versuch (außer bei Sieg/Niederlage) wird
+   zufällig eine dieser Nachrichten im Popup angezeigt.
+   - Maximal 2 Zeilen auf dem Handy, also ca. 60 Zeichen pro Nachricht.
+   - Mindestens 2 Nachrichten eintragen, damit sich nichts direkt wiederholt.
+   - Jede Nachricht in Anführungszeichen, mit Komma dahinter.
+   -------------------------------------------------------------------------- */
+const ENCOURAGEMENTS = [
+    "Doing amazing sweetie!",
+    "You can do it!",
+    "Keep going!",
+];
+
+
+/* --------------------------------------------------------------------------
+   SIEGESNACHRICHTEN: Werden angezeigt, wenn das Wort erraten wurde.
+   Welche Nachricht kommt, hängt davon ab, im wievielten Versuch es geklappt hat.
+   - Reihenfolge nicht ändern: 1. Eintrag = im 1. Versuch gelöst,
+     2. Eintrag = im 2. Versuch gelöst, ... 7. Eintrag = im Bonusversuch gelöst.
+   - Es müssen genau 7 Nachrichten sein (6 normale Versuche + Bonusversuch).
+   - Maximal 2 Zeilen auf dem Handy, also ca. 60 Zeichen pro Nachricht.
+   -------------------------------------------------------------------------- */
+const WIN_MESSAGES = [
+    "...1", // im 1. Versuch gelöst
+    "...2", // im 2. Versuch gelöst
+    "...3", // im 3. Versuch gelöst
+    "...4", // im 4. Versuch gelöst
+    "...5", // im 5. Versuch gelöst
+    "...6", // im 6. Versuch gelöst
+    "...7", // im Bonusversuch (7.) gelöst
+];
+
+
+/* --------------------------------------------------------------------------
+   LETZTER VERSUCH: Wird nach dem 5. Fehlversuch angezeigt, also bevor der
+   6. Versuch beginnt (der scheinbar letzte, vom Bonusversuch weiß sie nichts).
+   - Maximal 2 Zeilen auf dem Handy, also ca. 60 Zeichen.
+   -------------------------------------------------------------------------- */
+const LAST_TRY_MESSAGE = "LAST CHANCE!";

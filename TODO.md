@@ -72,6 +72,12 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [x] Eigene Niederlage-Nachricht in `config.js` (kommt erst nach dem gescheiterten Bonusversuch, ersetzt „The word was: …“)
 - [x] Der Bonusversuch wird im gespeicherten Spielstand berücksichtigt (beim Neuladen nach 6 Fehlversuchen ist die 7. Reihe direkt sichtbar, kein erneuter Dialog)
 
+### Begrüßungs-Dialog
+- [x] Dialogfenster mit eigener Nachricht und einem Button, das zu Beginn des Spiels aufgeht (an Tag 1 und Tag 24)
+- [x] Nachricht pro Tag in `config.js` einstellbar (Tage ohne Nachricht haben keinen Dialog)
+- [x] Erscheint nur, solange an dem Tag noch kein Versuch gemacht wurde (nicht nach Neuladen mitten im Spiel)
+- [x] Gemeinsames Aussehen mit dem Bonus-Dialog (CSS-Klasse statt doppelter Regeln)
+
 ### Verbesserungen am bestehenden Code
 - [x] Bug behoben: Eine alte Meldung konnte eine neue zu früh ausblenden → Timer entfernt, jede Nachricht bleibt stehen, bis eine neue sie ablöst
 - [x] Kommentare von „Rot“ auf „Gelb/Gold“ angepasst (`style.css`, `script.js`)

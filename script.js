@@ -70,13 +70,18 @@ function restoreState() {
     }
 }
 
-/* HTML-Elemente für Spielfeld, Nachrichtenbox und Bonus-Dialog im Code verfügbar machen */
+/* HTML-Elemente für Spielfeld, Nachrichtenbox, Begrüßungs- und Bonus-Dialog im Code verfügbar machen */
 const board = document.getElementById("board");
 const messageContainer = document.getElementById("message-container");
-const bonusDialog = document.getElementById("bonus-dialog");     // Das ganze Dialogfenster (zum Öffnen/Schließen)
-const bonusText = document.getElementById("bonus-text");         // Nur der Textabsatz im Dialog
-const bonusButton1 = document.getElementById("bonus-button-1");  // Linker Button im Dialog
-const bonusButton2 = document.getElementById("bonus-button-2");  // Rechter Button im Dialog
+
+const introDialog = document.getElementById("intro-dialog");     // Begrüßungs-Dialog: das ganze Fenster (zum Öffnen/Schließen)
+const introText = document.getElementById("intro-text");         // Begrüßungs-Dialog: nur der Textabsatz
+const introButton = document.getElementById("intro-button");     // Begrüßungs-Dialog: Button zum Schließen
+
+const bonusDialog = document.getElementById("bonus-dialog");     // Bonus-Dialog: das ganze Fenster (zum Öffnen/Schließen)
+const bonusText = document.getElementById("bonus-text");         // Bonus-Dialog: nur der Textabsatz
+const bonusButton1 = document.getElementById("bonus-button-1");  // Bonus-Dialog: linker Button
+const bonusButton2 = document.getElementById("bonus-button-2");  // Bonus-Dialog: rechter Button
 
 /* Funktion: Erstellt das Raster (6 normale Zeilen + 1 versteckte Bonuszeile, je 5 Kacheln) beim Laden der Seite dynamisch im HTML */
 function initBoard() {
@@ -294,6 +299,12 @@ document.querySelectorAll("#keyboard button").forEach(button => {
     });
 });
 
+/* Event-Listener: Der Button im Begrüßungs-Dialog schließt nur den Dialog.
+   Eine Eingabesperre ist nicht nötig, solange der Dialog offen ist, ist das Spiel dahinter ohnehin gesperrt */
+introButton.addEventListener("click", () => {
+    introDialog.close();
+});
+
 /* Event-Listener: Beide Buttons im Bonus-Dialog rufen dieselbe Funktion auf.
    Wichtig: closeBonusDialog OHNE Klammern übergeben, damit sie erst beim Klick ausgeführt wird */
 bonusButton1.addEventListener("click", closeBonusDialog);
@@ -331,3 +342,12 @@ bonusText.textContent = BONUS.dialog;
 bonusButton1.textContent = BONUS.button1;
 bonusButton2.textContent = BONUS.button2;
 restoreState();
+
+/* Begrüßungs-Dialog öffnen, wenn der Tag in config.js ein "intro" hat (fehlt es, ist today.intro
+   undefined und zählt als falsch) UND noch kein Versuch gemacht wurde. Muss NACH restoreState()
+   stehen, weil savedGuesses erst dort aus dem Speicher geladen wird */
+if (today.intro && savedGuesses.length === 0) {
+    introText.textContent = today.intro;
+    introButton.textContent = INTRO_BUTTON;
+    introDialog.showModal();
+}

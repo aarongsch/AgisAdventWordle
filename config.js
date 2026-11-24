@@ -6,26 +6,36 @@
 
 
 /* --------------------------------------------------------------------------
-   TAGE: Wort und Startnachricht pro Tag
+   TAGE: Wort, Startnachricht und (optional) Begrüßungs-Dialog pro Tag
    - Die Zahl links ist der Tag. Sie entspricht dem URL-Parameter (?day=1, ?day=3 etc.).
    - word:  Das Lösungswort. Genau 5 Buchstaben, in GROSSBUCHSTABEN.
    - start: Die Nachricht, die beim Öffnen des Wordles im Popup steht.
             Maximal 2 Zeilen auf dem Handy, also ca. 60 Zeichen.
+   - intro: OPTIONAL. Text für ein Dialogfenster, das beim Öffnen des Wordles
+            erscheint (nur solange an dem Tag noch kein Versuch gemacht wurde).
+            Darf länger sein. Fehlt das Feld, gibt es an dem Tag keinen Dialog.
    - Nur Tage, die hier stehen, haben ein Wordle. Ein neuer Tag braucht
      nur eine neue Zeile (Komma am Zeilenende nicht vergessen).
    - Wird das Wort eines Tages geändert, startet der gespeicherte Spielstand
      dieses Tages neu.
    -------------------------------------------------------------------------- */
 const DAYS = {
-    1:  { word: "HEART", start: "Guten Morgen Sonnenschein!" },
-    3:  { word: "SNOWY", start: "..." },
+    1:  { word: "HEART", start: "Hello", intro: "Oh? What's this? It seems to be your very own Christmas Wordle. Merry Christmas Ági and enjoy!" },
+    3:  { word: "SNOWY", start: "Guten Morgen Sonnenschein!" },
     5:  { word: "ANGEL", start: "..." },
     8:  { word: "LIGHT", start: "..." },
     12: { word: "SANTA", start: "..." },
     15: { word: "MAGIC", start: "..." },
     20: { word: "SWEET", start: "..." },
-    24: { word: "LOVED", start: "..." }
+    24: { word: "LOVED", start: "...", intro: "I hope you enjoyed your Christmas Wordle!" },
 };
+
+
+/* --------------------------------------------------------------------------
+   BEGRÜSSUNGS-DIALOG: Beschriftung des Buttons, der den Dialog schließt.
+   Gilt für alle Tage, die oben in DAYS ein "intro" haben.
+   -------------------------------------------------------------------------- */
+const INTRO_BUTTON = "Let's go!";
 
 
 /* --------------------------------------------------------------------------
@@ -66,7 +76,7 @@ const WIN_MESSAGES = [
    6. Versuch beginnt (der scheinbar letzte, vom Bonusversuch weiß sie nichts).
    - Maximal 2 Zeilen auf dem Handy, also ca. 60 Zeichen.
    -------------------------------------------------------------------------- */
-const LAST_TRY_MESSAGE = "LAST CHANCE!";
+const LAST_TRY_MESSAGE = "LAST CHANCE ÁGI!";
 
 
 /* --------------------------------------------------------------------------
@@ -83,11 +93,11 @@ const LAST_TRY_MESSAGE = "LAST CHANCE!";
               In Millisekunden: 1000 = 1 Sekunde. Solange ist keine Eingabe möglich.
    -------------------------------------------------------------------------- */
 const BONUS = {
-    popup:   "Oouuar noouaar, it's over! OR IS IT?",
+    popup:   "Oouuar nouaar, it's over! OR IS IT?!",
     dialog:  "...",
     button1: "Yes",
     button2: "YESSS!",
-    delay:   1500,
+    delay:   2000,
 };
 
 

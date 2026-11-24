@@ -27,14 +27,25 @@
         <div id="board"></div>
 
         <!-- Bonus-Dialog: öffnet sich nach dem 6. Fehlversuch. Alle Texte kommen aus BONUS in config.js.
-             Steht bewusst NICHT im #keyboard-Bereich, sonst würden die Buttons als Tasten behandelt -->
-        <dialog id="bonus-dialog">
+             Beide Dialoge stehen bewusst NICHT im #keyboard-Bereich, sonst würden die Buttons als Tasten behandelt -->
+        <dialog id="bonus-dialog" class="game-dialog">
             <!-- Text im Dialog -->
             <p id="bonus-text"></p>
             <!-- Die beiden Buttons nebeneinander (beide tun dasselbe) -->
-            <div class="bonus-buttons">
+            <div class="dialog-buttons">
                 <button id="bonus-button-1"></button>
                 <button id="bonus-button-2"></button>
+            </div>
+        </dialog>
+
+        <!-- Begrüßungs-Dialog: öffnet sich beim Start, wenn der Tag in config.js ein "intro" hat
+             und noch kein Versuch gemacht wurde. Gleiches Aussehen wie der Bonus-Dialog (Klasse game-dialog) -->
+        <dialog id="intro-dialog" class="game-dialog">
+            <!-- Text im Dialog -->
+            <p id="intro-text"></p>
+            <!-- Ein Button, der den Dialog schließt -->
+            <div class="dialog-buttons">
+                <button id="intro-button"></button>
             </div>
         </dialog>
 

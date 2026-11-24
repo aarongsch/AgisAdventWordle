@@ -44,7 +44,7 @@
     /* ---- Gesamtbreite ---- */
     --content-w: min(94vw, 460px); /* Maximale Spielbreite. 94vw = 94% der Handybreite. Einstellbar: 460px = Obergrenze auf Tablet/PC; 94vw = Seitenrand (z.B. 100vw = kein Rand) */
     --keyboard-w: min(94vw, 500px); /* Maximale Tastaturbreite. Einstellbar: 500px = Obergrenze; 94vw = Seitenrand der Tastatur */
-    --dialog-w: min(94vw, 500px);   /* Maximale Breite des Bonus-Dialogs. Einstellbar: 500px = Obergrenze; 94vw = Seitenrand des Dialogs */
+    --dialog-w: min(94vw, 500px);   /* Breite der Dialogfenster (Begrüßung und Bonus). Einstellbar: 500px = Obergrenze; 94vw = Seitenrand des Dialogs */
 
     /* ---- Vertikale Abstände zwischen den 4 Blöcken (Titel, Popup, Raster, Tastatur) ---- */
     --gap: clamp(8px, calc(2.2 * var(--vh)), 28px); /* Abstand zwischen den Blöcken. Einstellbar: 8px = Minimum (nie enger); 2.2 = Prozent der Bildschirmhöhe (größer = luftiger); 28px = Maximum (nie weiter) */
@@ -289,12 +289,13 @@ header h1 {                      /* Der Titeltext selbst */
 }
 
 /* ==========================================================================
-   10. BONUS-DIALOG (Dialogfenster nach dem 6. Fehlversuch)
+   10. DIALOGFENSTER (Begrüßungs-Dialog und Bonus-Dialog)
+   Beide Dialoge haben im HTML die Klasse "game-dialog" und sehen daher gleich aus.
    ========================================================================== */
-#bonus-dialog {                  /* Das Dialogfenster */
+.game-dialog {                   /* Jedes Dialogfenster mit der Klasse game-dialog */
     font-weight: bold;           /* Fettdruck. Einstellbar: normal oder bold */
     font-size: clamp(0.75rem, 3.2vw, 0.9rem); /* Schriftgröße. Einstellbar: Minimum 0.75rem, 3.2vw = 3.2% der Breite, Maximum 0.9rem */
-    white-space: normal;         /* Text darf in mehrere Zeilen umbrechen (Höhe für 2 Zeilen über --msg-h) */
+    white-space: normal;         /* Text darf in beliebig viele Zeilen umbrechen, der Dialog wächst mit */
     line-height: 1.25;           /* Zeilenhöhe = 125% der Schriftgröße. Einstellbar: 1 = eng, 1.5 = luftig */
     margin: auto;                /* Zentriert den Dialog. NICHT entfernen: der Reset in Abschnitt 3 setzt margin auf 0, dann klebt der Dialog oben links */
     background-color: var(--bg-color); /* Hintergrundfarbe des Dialogs (aus Abschnitt 1) */
@@ -302,32 +303,32 @@ header h1 {                      /* Der Titeltext selbst */
     border: 2px solid var(--gold-accent); /* Rahmenfarbe (Gold aus Abschnitt 1). Einstellbar: Hex-Farbcode */
     border-radius: 6px;          /* Rundung der Ecken. Einstellbar: 0 = eckig, 16px = sehr rund */
     padding: 16px;               /* Innenabstand im Dialog. Einstellbar: Pixelwert */
-    width: var(--dialog-w);       /* Gleiche Breite wie das Buchstabenraster (aus Abschnitt 2) */
+    width: var(--dialog-w);      /* Breite der Dialoge (aus Abschnitt 2) */
     text-align: center;          /* Text zentriert ausrichten */
     font-family: inherit;        /* Übernimmt die Schriftart der Seite (Dialoge tun das sonst nicht) */
 }
 
-#bonus-dialog::backdrop {        /* Fläche hinter dem geöffneten Dialog, dunkelt das Spiel ab (erzeugt der Browser automatisch) */
+.game-dialog::backdrop {         /* Fläche hinter dem geöffneten Dialog, dunkelt das Spiel ab (erzeugt der Browser automatisch) */
     background-color: rgba(0, 0, 0, 0.5); /* Schwarz mit 50% Deckkraft. Einstellbar: RGB + Deckkraft */
 }
 
-.bonus-buttons {                 /* Container für die beiden Buttons */
+.dialog-buttons {                /* Container für die Buttons eines Dialogs (1 oder 2 Buttons) */
     display: flex;               /* Flexbox, damit sich die Buttons nebeneinander anordnen */
     justify-content: center;     /* Buttons zentrieren */
     gap: 30px;                   /* Abstand zwischen den Buttons. Einstellbar: Pixelwert */
     margin-top: 12px;            /* Abstand zwischen Text und Buttons. Einstellbar: Pixelwert */
 }
 
-.bonus-buttons button {          /* Die beiden Buttons im Dialog */
+.dialog-buttons button {         /* Jeder Button in einem Dialog */
     font-family: inherit;        /* Übernimmt die Schriftart der Seite */
     font-weight: bold;           /* Fettdruck. Einstellbar: normal oder bold */
     font-size: clamp(0.7rem, 3vw, 0.95rem); /* Schriftgröße der Buttons. Einstellbar: Minimum 0.7rem, 3vw = 3% der Breite, Maximum 0.95rem */
-    flex: 1;                     /* Beide Buttons teilen sich die Breite gleichmäßig */
+    flex: 1;                     /* Buttons teilen sich die Breite gleichmäßig (ein einzelner Button wird volle Breite) */
     border: 0;                   /* Kein Rahmen. Einstellbar: z.B. 1px solid #fff */
     padding: 8px 16px;           /* Innenabstand in den Buttons: 8px oben/unten, 16px links/rechts. Einstellbar: Pixelwerte */
     border-radius: 4px;          /* Rundung der Ecken. Einstellbar: 0 = eckig, 8px = runder */
     background-color: var(--key-bg); /* Buttonfarbe (aus Abschnitt 1) */
-    color: var(--text-color); /* Beschriftungsfarbe: Grün (aus Abschnitt 1) */
+    color: var(--text-color);    /* Beschriftungsfarbe (aus Abschnitt 1) */
     cursor: pointer;             /* Handzeiger bei Maus-Bedienung am PC */
     user-select: none;           /* Beschriftung kann nicht markiert werden */
     touch-action: manipulation;  /* Verhindert Doppeltipp-Zoom beim schnellen Tippen auf Handys. Nicht ändern */

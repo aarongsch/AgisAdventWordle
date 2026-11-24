@@ -295,7 +295,7 @@ header h1 {                      /* Der Titeltext selbst */
 .game-dialog {                   /* Jedes Dialogfenster mit der Klasse game-dialog */
     font-weight: bold;           /* Fettdruck. Einstellbar: normal oder bold */
     font-size: clamp(0.75rem, 3.2vw, 0.9rem); /* Schriftgröße. Einstellbar: Minimum 0.75rem, 3.2vw = 3.2% der Breite, Maximum 0.9rem */
-    white-space: normal;         /* Text darf in beliebig viele Zeilen umbrechen, der Dialog wächst mit */
+    white-space: normal;         /* Normale Behandlung von Leerraum im Dialog selbst (Zeilenumbrüche für den Text siehe ".game-dialog p") */
     line-height: 1.25;           /* Zeilenhöhe = 125% der Schriftgröße. Einstellbar: 1 = eng, 1.5 = luftig */
     margin: auto;                /* Zentriert den Dialog. NICHT entfernen: der Reset in Abschnitt 3 setzt margin auf 0, dann klebt der Dialog oben links */
     background-color: var(--bg-color); /* Hintergrundfarbe des Dialogs (aus Abschnitt 1) */
@@ -308,24 +308,30 @@ header h1 {                      /* Der Titeltext selbst */
     font-family: inherit;        /* Übernimmt die Schriftart der Seite (Dialoge tun das sonst nicht) */
 }
 
+.game-dialog p {                 /* Der Textabsatz in einem Dialog */
+    white-space: pre-line;       /* Text bricht automatisch um, \n im Text (config.js) erzeugt einen Zeilenumbruch. Nur hier und nicht im ganzen Dialog, sonst würden die Zeilenumbrüche im HTML-Code als Leerzeilen angezeigt */
+}
+
 .game-dialog::backdrop {         /* Fläche hinter dem geöffneten Dialog, dunkelt das Spiel ab (erzeugt der Browser automatisch) */
     background-color: rgba(0, 0, 0, 0.5); /* Schwarz mit 50% Deckkraft. Einstellbar: RGB + Deckkraft */
 }
 
 .dialog-buttons {                /* Container für die Buttons eines Dialogs (1 oder 2 Buttons) */
-    display: flex;               /* Flexbox, damit sich die Buttons nebeneinander anordnen */
-    justify-content: center;     /* Buttons zentrieren */
+    display: grid;               /* Grid-Layout: jeder Button bekommt eine eigene Spalte */
+    grid-auto-flow: column;      /* Buttons stehen nebeneinander (jeder weitere Button = neue Spalte) */
+    grid-auto-columns: 1fr;      /* Alle Spalten gleich breit, und zwar so breit wie der Button mit dem längsten Text */
+    width: max-content;          /* Container nur so breit wie die Buttons selbst (nicht die ganze Dialogbreite) */
+    max-width: 100%;             /* Bei sehr langen Button-Texten nie breiter als der Dialog (Text bricht dann um) */
     gap: 30px;                   /* Abstand zwischen den Buttons. Einstellbar: Pixelwert */
-    margin-top: 12px;            /* Abstand zwischen Text und Buttons. Einstellbar: Pixelwert */
+    margin: 12px auto 0;         /* 12px Abstand zum Text oben, "auto" links/rechts zentriert die Buttons. Einstellbar: 12px */
 }
 
 .dialog-buttons button {         /* Jeder Button in einem Dialog */
     font-family: inherit;        /* Übernimmt die Schriftart der Seite */
     font-weight: bold;           /* Fettdruck. Einstellbar: normal oder bold */
     font-size: clamp(0.7rem, 3vw, 0.95rem); /* Schriftgröße der Buttons. Einstellbar: Minimum 0.7rem, 3vw = 3% der Breite, Maximum 0.95rem */
-    flex: 1;                     /* Buttons teilen sich die Breite gleichmäßig (ein einzelner Button wird volle Breite) */
     border: 0;                   /* Kein Rahmen. Einstellbar: z.B. 1px solid #fff */
-    padding: 8px 16px;           /* Innenabstand in den Buttons: 8px oben/unten, 16px links/rechts. Einstellbar: Pixelwerte */
+    padding: 8px 16px;           /* Innenabstand in den Buttons: 8px oben/unten, 16px links/rechts. Bestimmt, wie viel größer der Button als sein Text ist. Einstellbar: Pixelwerte */
     border-radius: 4px;          /* Rundung der Ecken. Einstellbar: 0 = eckig, 8px = runder */
     background-color: var(--key-bg); /* Buttonfarbe (aus Abschnitt 1) */
     color: var(--text-color);    /* Beschriftungsfarbe (aus Abschnitt 1) */

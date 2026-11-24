@@ -62,6 +62,7 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [ ] Startnachrichten, Aufmunterungen, Siegesnachrichten und „Last try“ mit echten Texten füllen (`config.js`)
 - [x] Das Popup kann auch längere Nachrichten zeigen (2 Zeilen, gleiche Breite wie das Raster)
 - [ ] Optional: mehrere Pools je nach Fortschritt (Anzahl grüner/gelber Buchstaben), aus denen jeweils zufällig gewählt wird
+- [ ] Längste Nachrichten (vor allem mit Emojis) auf kleinem Handy prüfen (iPhone SE in der Device Toolbar): passen sie in 2 Zeilen? Emojis sind breiter als Buchstaben
 
 ### Bonusversuch (versteckte 7. Reihe)
 - [x] Das Raster bekommt eine 7. Reihe, die zunächst unsichtbar ist, aber ihren Platz schon belegt (zwischen Reihe 6 und Tastatur); das Raster darf dafür etwas kleiner werden
@@ -84,4 +85,16 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [x] Zu kurzes Wort: Zeile wackelt (Shake-Animation) statt Meldung „Not enough letters!“
 - [x] Nachrichtenfeld nicht mehr per Klasse `hidden` steuern, sondern automatisch ausblenden, solange es leer ist (`:empty`)
 - [ ] Optional: Lesbarkeit prüfen – weiße Schrift auf hellem Gold ist evtl. schwer zu lesen (dunklere Schrift oder dunkleres Gold)
-- [ ] Optional: Animation beim Aufdecken der Buchstaben und beim Sieg
+- [ ] Animation beim Aufdecken der Buchstaben (Kacheln drehen sich nacheinander um und zeigen dabei ihre Farbe)
+- [ ] Optional: Animation beim Sieg
+
+### Bilder, Sticker und GIFs
+- [ ] Entscheiden, wo Sticker/GIFs erscheinen sollen: in den Dialogen (empfohlen, die wachsen mit) und/oder klein im Popup oben (dort nur ca. Emoji-Größe, da feste Höhe für 2 Textzeilen)
+- [ ] Ordner für Bilddateien im Projekt anlegen (z. B. `img/`) und die Dateien dort ablegen (GIF, WebP z. B. WhatsApp-Sticker, PNG); auf kleine Dateigrößen achten, da auf dem Handy geladen
+- [ ] In `config.js` pro Nachricht bzw. Dialog optional ein Bild angeben können (Dateiname)
+- [ ] HTML/JavaScript: Bild-Element (`<img>`) im Dialog bzw. Popup, das nur angezeigt wird, wenn ein Bild angegeben ist
+- [ ] CSS: Größe der Bilder begrenzen, damit sie auf jedem Handy passen
+
+### Benachrichtigungen per netify (optional)
+- [ ] Optional: Push-Nachricht an mich über ntfy.sh (App aufs Handy, zufälliges Topic abonnieren), wenn sie den ersten Versuch eines Tages abschickt und wenn sie gewinnt/verliert (mit Anzahl der Versuche)
+- [ ] Optional: Keine Nachricht beim Wiederherstellen des Spielstands (`isRestoring`) und ein Schalter in `config.js`, um die Benachrichtigungen beim eigenen Testen abzuschalten

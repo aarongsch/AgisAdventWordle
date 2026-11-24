@@ -14,14 +14,17 @@
    - intro: OPTIONAL. Text für ein Dialogfenster, das beim Öffnen des Wordles
             erscheint (nur solange an dem Tag noch kein Versuch gemacht wurde).
             Darf länger sein. Fehlt das Feld, gibt es an dem Tag keinen Dialog.
+            Eigene Zeilenumbrüche mit \n, eine Leerzeile mit \n\n
+            (z. B. "Hallo!\nSchön, dass du da bist."). Das funktioniert nur
+            in den Dialogen, nicht in den Popup-Nachrichten oben.
    - Nur Tage, die hier stehen, haben ein Wordle. Ein neuer Tag braucht
      nur eine neue Zeile (Komma am Zeilenende nicht vergessen).
    - Wird das Wort eines Tages geändert, startet der gespeicherte Spielstand
      dieses Tages neu.
    -------------------------------------------------------------------------- */
 const DAYS = {
-    1:  { word: "HEART", start: "Hello", intro: "Oh? What's this? It seems to be your very own Christmas Wordle. Merry Christmas Ági and enjoy!" },
-    3:  { word: "SNOWY", start: "Guten Morgen Sonnenschein!" },
+    1:  { word: "HEART", start: "Hello", intro: "Oh? Hoho SANTA What's this? PRESENT\nIt seems to be your very own\n✨ Christmas Wordle ✨\n\nMerry Christmas Ági and enjoy! CHRISTMASTREE" },
+    3:  { word: "SNOWY", start: "Guten Morgen Sonnenschein! SUN" },
     5:  { word: "ANGEL", start: "..." },
     8:  { word: "LIGHT", start: "..." },
     12: { word: "SANTA", start: "..." },

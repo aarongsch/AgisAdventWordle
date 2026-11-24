@@ -39,8 +39,8 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 ## Noch offen
 
 ### Links
-- [ ] Jeder Tag bekommt statt `?day=N` einen zufälligen, nicht erratbaren Code im Link (z. B. `?t=k7F2qX9a`), damit man andere Tage nicht durch Ändern der Zahl aufrufen kann (keine Verschlüsselung, die Wörter dürfen im Quelltext stehen)
-- [ ] Ungültiger oder fehlender Code: freundliche Meldung statt Fallback auf Tag 1
+- [x] Jeder Tag bekommt statt `?day=N` einen zufälligen, nicht erratbaren Code im Link (z. B. `?t=k7F2qX9a`), damit man andere Tage nicht durch Ändern der Zahl aufrufen kann (keine Verschlüsselung, die Wörter dürfen im Quelltext stehen)
+- [x] Ungültiger oder fehlender Code: freundliche Meldung (`INVALID_LINK_MESSAGE`), Spielfeld und Tastatur ausgeblendet
 - [ ] Optional: Zeitsperre, die ein Wordle erst ab 0 Uhr seines Tages freischaltet
 - [ ] QR-Codes aus den fertigen Links erzeugen und zum Ausdrucken vorbereiten
 - [ ] Prüfen, dass jeder Link auf dem Handy über GitHub Pages funktioniert
@@ -98,3 +98,5 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 ### Benachrichtigungen per netify (optional)
 - [ ] Optional: Push-Nachricht an mich über ntfy.sh (App aufs Handy, zufälliges Topic abonnieren), wenn sie den ersten Versuch eines Tages abschickt und wenn sie gewinnt/verliert (mit Anzahl der Versuche)
 - [ ] Optional: Keine Nachricht beim Wiederherstellen des Spielstands (`isRestoring`) und ein Schalter in `config.js`, um die Benachrichtigungen beim eigenen Testen abzuschalten
+
+### Kalender, in dem man alle bisherigen Tage sehen kann

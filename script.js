@@ -1,11 +1,22 @@
-/* URL-Parameter auslesen (z. B. "?day=3"), um das richtige Wort für den jeweiligen Tag zu laden */
+/* URL-Parameter auslesen: Der Link aus dem QR-Code enthält den Code des Tages (z. B. "?t=vv5wqhmw") */
 const urlParams = new URLSearchParams(window.location.search);
-const currentDay = parseInt(urlParams.get('day')) || 1;
+const currentCode = urlParams.get("t"); // Code aus dem Link (null, wenn der Link keinen Code enthält)
 
-/* Daten des aktuellen Tages (Wort und Startnachricht) aus DAYS in config.js holen.
-   Gibt es den Tag dort nicht, wird der erste Tag der Liste genommen */
-const today = DAYS[currentDay] || Object.values(DAYS)[0];
-const targetWord = today.word;
+/* Den Tag suchen, dessen "code" in DAYS (config.js) zum Code aus dem Link passt.
+   "for ... in" geht alle Schlüssel von DAYS durch, also die Tageszahlen "1", "3", "5", ...
+   Passt kein Code (falscher oder fehlender Link), bleibt currentDay null */
+let currentDay = null;
+for (const day in DAYS) {
+    if (DAYS[day].code === currentCode) {
+        currentDay = day;
+        break; // Treffer gefunden, die restlichen Tage müssen nicht mehr geprüft werden
+    }
+}
+
+/* Daten des gefundenen Tages (Code, Wort, Startnachricht, Intro) aus DAYS holen.
+   Ohne passenden Code ist today undefined. Dann startet das Spiel nicht (siehe "Spiel initialisieren" ganz unten) */
+const today = DAYS[currentDay];
+const targetWord = today?.word; // "?." = nur auf .word zugreifen, wenn today existiert, sonst undefined (statt Absturz)
 
 /* Spielregeln-Konstanten: 6 normale Versuche + 1 versteckter Bonusversuch (Zeilen) und 5 Buchstaben pro Wort (Spalten) */
 const ROWS = 6;             // Anzahl der normalen Versuche (darauf bauen "Last try" und die Siegesnachrichten auf)
@@ -25,7 +36,7 @@ let isWaitingForBonus = false; // Statusvariable: True zwischen dem 6. Fehlversu
    abgelegt ("localStorage"), getrennt für jeden Tag. Beim Neuladen der Seite
    werden die Versuche wiederhergestellt, inklusive Farben und Tastatur.
    - Wird das Wort eines Tages im Code geändert, startet dieser Tag neu.
-   - Zum Testen: "&reset" an den Link hängen (z. B. "?day=3&reset"), dann
+   - Zum Testen: "&reset" an den Link hängen (z. B. "?t=vv5wqhmw&reset"), dann
      wird der gespeicherte Stand dieses Tages gelöscht.
    ========================================================================== */
 const STORAGE_KEY = `agis-wordle-day-${currentDay}`; // Name des Speicherplatzes, z. B. "agis-wordle-day-3"
@@ -333,21 +344,38 @@ function handleInput(key) {
     }
 }
 
-/* Spiel initialisieren: Das leere Spielfeld aufbauen, Texte setzen und gespeicherten Spielstand wiederherstellen */
-initBoard();
-showMessage(today.start);
-// Texte des Bonus-Dialogs aus config.js einsetzen (in den Absatz, NICHT in den ganzen Dialog,
-// sonst würden die Buttons überschrieben)
-bonusText.textContent = BONUS.dialog;
-bonusButton1.textContent = BONUS.button1;
-bonusButton2.textContent = BONUS.button2;
-restoreState();
+/* ==========================================================================
+   SPIEL INITIALISIEREN
+   Gültiger Link (Code passt zu einem Tag): Spiel ganz normal starten.
+   Ungültiger oder fehlender Link: Nachricht zeigen, Spielfeld und Tastatur ausblenden.
+   ========================================================================== */
+if (today) {
+    // Das leere Spielfeld aufbauen und die Startnachricht des Tages anzeigen
+    initBoard();
+    showMessage(today.start);
 
-/* Begrüßungs-Dialog öffnen, wenn der Tag in config.js ein "intro" hat (fehlt es, ist today.intro
-   undefined und zählt als falsch) UND noch kein Versuch gemacht wurde. Muss NACH restoreState()
-   stehen, weil savedGuesses erst dort aus dem Speicher geladen wird */
-if (today.intro && savedGuesses.length === 0) {
-    introText.textContent = today.intro;
-    introButton.textContent = INTRO_BUTTON;
-    introDialog.showModal();
+    // Texte des Bonus-Dialogs aus config.js einsetzen (in den Absatz, NICHT in den ganzen Dialog,
+    // sonst würden die Buttons überschrieben)
+    bonusText.textContent = BONUS.dialog;
+    bonusButton1.textContent = BONUS.button1;
+    bonusButton2.textContent = BONUS.button2;
+
+    // Gespeicherten Spielstand wiederherstellen
+    restoreState();
+
+    /* Begrüßungs-Dialog öffnen, wenn der Tag in config.js ein "intro" hat (fehlt es, ist today.intro
+       undefined und zählt als falsch) UND noch kein Versuch gemacht wurde. Muss NACH restoreState()
+       stehen, weil savedGuesses erst dort aus dem Speicher geladen wird */
+    if (today.intro && savedGuesses.length === 0) {
+        introText.textContent = today.intro;
+        introButton.textContent = INTRO_BUTTON;
+        introDialog.showModal();
+    }
+} else {
+    // Ungültiger Link: Nachricht anzeigen
+    showMessage(INVALID_LINK_MESSAGE);
+    // Klasse "invalid-link" an den <body> hängen, style.css blendet damit Spielfeld und Tastatur aus
+    document.body.classList.add("invalid-link");
+    // Eingaben sperren: Am Laptop könnte man sonst trotzdem tippen, und es gibt ja keine Kacheln
+    isGameOver = true;
 }

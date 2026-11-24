@@ -110,6 +110,15 @@ body {                           /* Gesamte Seite */
     -webkit-text-size-adjust: 100%; /* Verhindert, dass iPhones Schriftgrößen beim Drehen eigenmächtig vergrößern */
 }
 
+/* Ungültiger Link: script.js gibt dem <body> dann die Klasse "invalid-link".
+   Das Leerzeichen zwischen den Selektoren bedeutet "liegt irgendwo darin":
+   Spielfeld und Tastatur INNERHALB von .invalid-link werden ausgeblendet.
+   Hier bewusst display: none (kein Platz soll frei bleiben), Titel und Popup bleiben sichtbar */
+.invalid-link #board,
+.invalid-link #keyboard {
+    display: none;               /* Spielfeld und Tastatur komplett ausblenden */
+}
+
 
 /* ==========================================================================
    5. HAUPTCONTAINER (Hält Titel, Popup, Raster und Tastatur zusammen)

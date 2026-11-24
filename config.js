@@ -7,7 +7,13 @@
 
 /* --------------------------------------------------------------------------
    TAGE: Wort, Startnachricht und (optional) Begrüßungs-Dialog pro Tag
-   - Die Zahl links ist der Tag. Sie entspricht dem URL-Parameter (?day=1, ?day=3 etc.).
+   - Die Zahl links ist der Tag. Sie dient nur der Übersicht und als Name des
+     Speicherplatzes für den Spielstand (nach dem ersten Spielen nicht mehr ändern,
+     sonst ist der gespeicherte Spielstand dieses Tages weg).
+   - code:  Der Code im Link bzw. QR-Code (z. B. ".../?t=vv5wqhmw"). Nur Buchstaben
+            und Ziffern, jeder Code darf nur einmal vorkommen. NACH DEM DRUCKEN
+            DER QR-CODES NIE MEHR ÄNDERN, sonst führt der QR-Code ins Leere.
+            Neuen Code erzeugen (Browser-Console): Math.random().toString(36).slice(2, 10)
    - word:  Das Lösungswort. Genau 5 Buchstaben, in GROSSBUCHSTABEN.
    - start: Die Nachricht, die beim Öffnen des Wordles im Popup steht.
             Maximal 2 Zeilen auf dem Handy, also ca. 60 Zeichen.
@@ -23,14 +29,14 @@
      dieses Tages neu.
    -------------------------------------------------------------------------- */
 const DAYS = {
-    1:  { word: "HEART", start: "Hello", intro: "Oh? Hoho SANTA What's this? PRESENT\nIt seems to be your very own\n✨ Christmas Wordle ✨\n\nMerry Christmas Ági and enjoy! CHRISTMASTREE" },
-    3:  { word: "SNOWY", start: "Guten Morgen Sonnenschein! SUN" },
-    5:  { word: "ANGEL", start: "..." },
-    8:  { word: "LIGHT", start: "..." },
-    12: { word: "SANTA", start: "..." },
-    15: { word: "MAGIC", start: "..." },
-    20: { word: "SWEET", start: "..." },
-    24: { word: "LOVED", start: "...", intro: "I hope you enjoyed your Christmas Wordle!" },
+    1:  { code: "vv5wqhmw", word: "HEART", start: "Hello", intro: "Oh? Hoho SANTA What's this? PRESENT\nIt seems to be your very own\n✨ Christmas Wordle ✨\n\nMerry Christmas Ági and enjoy! CHRISTMASTREE" },
+    3:  { code: "nph27ccs", word: "SNOWY", start: "Guten Morgen Sonnenschein! SUN" },
+    5:  { code: "xk9zr8yv", word: "ANGEL", start: "..." },
+    8:  { code: "qj4m2p1l", word: "LIGHT", start: "..." },
+    12: { code: "wf7t3n4s", word: "SANTA", start: "..." },
+    15: { code: "dr8u5v2c", word: "MAGIC", start: "..." },
+    20: { code: "pm6y9k4x", word: "SWEET", start: "..." },
+    24: { code: "6e6yanjd", word: "LOVED", start: "...", intro: "I hope you enjoyed your Christmas Wordle!" },
 };
 
 
@@ -111,3 +117,13 @@ const BONUS = {
    - Maximal 2 Zeilen auf dem Handy, also ca. 60 Zeichen (inkl. Wort).
    -------------------------------------------------------------------------- */
 const LOSS_MESSAGE = "Oopsie, the word was {WORD}.";
+
+
+
+/* --------------------------------------------------------------------------
+   UNGÜLTIGER LINK: Wird im Popup angezeigt, wenn der Link keinen oder einen
+   unbekannten Code enthält (z. B. abgetippt, verändert oder ohne "?t=...").
+   Spielfeld und Tastatur werden dann ausgeblendet.
+   - Maximal 2 Zeilen auf dem Handy, also ca. 60 Zeichen.
+   -------------------------------------------------------------------------- */
+const INVALID_LINK_MESSAGE = "Hmm, this door isn't open yet… 🎁";

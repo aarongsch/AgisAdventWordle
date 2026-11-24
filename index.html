@@ -23,8 +23,20 @@
         <!-- Container für Nachrichten (z.B. Sieg-Nachricht). Muss im HTML leer bleiben (auch ohne Leerzeichen), sonst greift das automatische Ausblenden (:empty) in style.css nicht -->
         <div id="message-container"></div>
 
-        <!-- Das 6x5 Spielfeld für die Rateversuche (wird via JavaScript befüllt) -->
+        <!-- Das Spielfeld für die Rateversuche: 6 Zeilen + 1 versteckte Bonuszeile, je 5 Kacheln (wird via JavaScript befüllt) -->
         <div id="board"></div>
+
+        <!-- Bonus-Dialog: öffnet sich nach dem 6. Fehlversuch. Alle Texte kommen aus BONUS in config.js.
+             Steht bewusst NICHT im #keyboard-Bereich, sonst würden die Buttons als Tasten behandelt -->
+        <dialog id="bonus-dialog">
+            <!-- Text im Dialog -->
+            <p id="bonus-text"></p>
+            <!-- Die beiden Buttons nebeneinander (beide tun dasselbe) -->
+            <div class="bonus-buttons">
+                <button id="bonus-button-1"></button>
+                <button id="bonus-button-2"></button>
+            </div>
+        </dialog>
 
         <!-- Virtuelle Bildschirmtastatur für die komfortable Bedienung auf dem Handy -->
         <div id="keyboard">

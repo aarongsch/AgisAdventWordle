@@ -44,6 +44,7 @@
     /* ---- Gesamtbreite ---- */
     --content-w: min(94vw, 460px); /* Maximale Spielbreite. 94vw = 94% der Handybreite. Einstellbar: 460px = Obergrenze auf Tablet/PC; 94vw = Seitenrand (z.B. 100vw = kein Rand) */
     --keyboard-w: min(94vw, 500px); /* Maximale Tastaturbreite. Einstellbar: 500px = Obergrenze; 94vw = Seitenrand der Tastatur */
+    --dialog-w: min(94vw, 500px);   /* Maximale Breite des Bonus-Dialogs. Einstellbar: 500px = Obergrenze; 94vw = Seitenrand des Dialogs */
 
     /* ---- Vertikale Abstände zwischen den 4 Blöcken (Titel, Popup, Raster, Tastatur) ---- */
     --gap: clamp(8px, calc(2.2 * var(--vh)), 28px); /* Abstand zwischen den Blöcken. Einstellbar: 8px = Minimum (nie enger); 2.2 = Prozent der Bildschirmhöhe (größer = luftiger); 28px = Maximum (nie weiter) */
@@ -67,7 +68,7 @@
     /* ---- Automatische Kachelberechnung (NICHT ändern, wird aus den Werten oben berechnet) ---- */
     --tile-by-width: calc((var(--content-w) - 4 * var(--tile-gap)) / 5); /* Kachelgröße, die in die BREITE passt: (Breite - 4 Lücken) / 5 Spalten */
     --board-h-avail: calc(var(--app-h) - 2 * var(--pad-y) - var(--header-h) - var(--msg-h) - var(--keyboard-h) - 3 * var(--gap)); /* Höhe, die für das Raster übrig bleibt: Bildschirm minus Ränder, Titel, Popup, Tastatur, 3 Lücken */
-    --tile-by-height: calc((var(--board-h-avail) - 5 * var(--tile-gap)) / 6); /* Kachelgröße, die in die HÖHE passt: (übrige Höhe - 5 Lücken) / 6 Zeilen */
+    --tile-by-height: calc((var(--board-h-avail) - 6 * var(--tile-gap)) / 7); /* Kachelgröße, die in die HÖHE passt: (übrige Höhe - 6 Lücken) / 7 Zeilen */
     --tile-size: clamp(var(--tile-min), min(var(--tile-by-width), var(--tile-by-height)), var(--tile-max)); /* Endgültige Kachelgröße: der kleinere der beiden Werte, begrenzt durch Min und Max */
     --board-w: calc(5 * var(--tile-size) + 4 * var(--tile-gap)); /* Endgültige Rasterbreite = 5 Kacheln + 4 Lücken */
 }
@@ -176,11 +177,11 @@ header h1 {                      /* Der Titeltext selbst */
 
 
 /* ==========================================================================
-   8. SPIELFELD-GRID (Die 6x5 Buchstaben-Kacheln)
+   8. SPIELFELD-GRID (7x5 Buchstaben-Kacheln: 6 normale Zeilen + 1 versteckte Bonuszeile)
    ========================================================================== */
 #board {                         /* Das gesamte Raster */
-    display: grid;               /* Grid-Layout für die 6 Zeilen */
-    grid-template-rows: repeat(6, var(--tile-size)); /* 6 Zeilen, jede genau so hoch wie eine Kachel. Einstellbar: Zahl 6 = Anzahl Versuche (muss zu ROWS in script.js passen) */
+    display: grid;               /* Grid-Layout für die 7 Zeilen (6 normale + 1 Bonuszeile) */
+    grid-template-rows: repeat(7, var(--tile-size)); /* 7 Zeilen, jede genau so hoch wie eine Kachel. Zahl 7 = Anzahl aller Zeilen inkl. Bonuszeile (muss zu TOTAL_ROWS in script.js passen) */
     row-gap: var(--tile-gap);    /* Abstand zwischen den Zeilen (aus Abschnitt 2) */
     flex-shrink: 0;              /* Raster wird nicht zusammengedrückt. Nicht ändern */
 }
@@ -189,6 +190,14 @@ header h1 {                      /* Der Titeltext selbst */
     display: grid;               /* Grid-Layout für die 5 Spalten */
     grid-template-columns: repeat(5, var(--tile-size)); /* 5 Spalten, jede genau so breit wie eine Kachel. Einstellbar: Zahl 5 = Wortlänge (muss zu COLS in script.js passen) */
     column-gap: var(--tile-gap); /* Abstand zwischen den Kacheln einer Zeile (aus Abschnitt 2) */
+}
+
+.bonus-row {                     /* Die Bonuszeile (7. Zeile). Hat zusätzlich die Klasse "row", erbt also deren Grid-Layout */
+    visibility: hidden;          /* Unsichtbar, belegt aber weiterhin ihren Platz (dient als Abstand zur Tastatur). NICHT display: none, sonst springt das Layout */
+}
+
+.bonus-row.revealed {            /* Bonuszeile, nachdem der Bonus-Dialog geschlossen wurde (Klasse "revealed" setzt script.js) */
+    visibility: visible;         /* Bonuszeile wird sichtbar */
 }
 
 .tile {                          /* Eine einzelne Buchstaben-Kachel */
@@ -277,4 +286,50 @@ header h1 {                      /* Der Titeltext selbst */
 
 #keyboard button:active {        /* Zustand, solange die Taste gedrückt wird */
     opacity: 0.8;                /* Leicht durchsichtig als Tipp-Feedback. Einstellbar: 1 = kein Effekt, 0.5 = deutlicher */
+}
+
+/* ==========================================================================
+   10. BONUS-DIALOG (Dialogfenster nach dem 6. Fehlversuch)
+   ========================================================================== */
+#bonus-dialog {                  /* Das Dialogfenster */
+    font-weight: bold;           /* Fettdruck. Einstellbar: normal oder bold */
+    font-size: clamp(0.75rem, 3.2vw, 0.9rem); /* Schriftgröße. Einstellbar: Minimum 0.75rem, 3.2vw = 3.2% der Breite, Maximum 0.9rem */
+    white-space: normal;         /* Text darf in mehrere Zeilen umbrechen (Höhe für 2 Zeilen über --msg-h) */
+    line-height: 1.25;           /* Zeilenhöhe = 125% der Schriftgröße. Einstellbar: 1 = eng, 1.5 = luftig */
+    margin: auto;                /* Zentriert den Dialog. NICHT entfernen: der Reset in Abschnitt 3 setzt margin auf 0, dann klebt der Dialog oben links */
+    background-color: var(--bg-color); /* Hintergrundfarbe des Dialogs (aus Abschnitt 1) */
+    color: var(--text-color);    /* Textfarbe im Dialog (aus Abschnitt 1) */
+    border: 2px solid var(--gold-accent); /* Rahmenfarbe (Gold aus Abschnitt 1). Einstellbar: Hex-Farbcode */
+    border-radius: 6px;          /* Rundung der Ecken. Einstellbar: 0 = eckig, 16px = sehr rund */
+    padding: 16px;               /* Innenabstand im Dialog. Einstellbar: Pixelwert */
+    width: var(--dialog-w);       /* Gleiche Breite wie das Buchstabenraster (aus Abschnitt 2) */
+    text-align: center;          /* Text zentriert ausrichten */
+    font-family: inherit;        /* Übernimmt die Schriftart der Seite (Dialoge tun das sonst nicht) */
+}
+
+#bonus-dialog::backdrop {        /* Fläche hinter dem geöffneten Dialog, dunkelt das Spiel ab (erzeugt der Browser automatisch) */
+    background-color: rgba(0, 0, 0, 0.5); /* Schwarz mit 50% Deckkraft. Einstellbar: RGB + Deckkraft */
+}
+
+.bonus-buttons {                 /* Container für die beiden Buttons */
+    display: flex;               /* Flexbox, damit sich die Buttons nebeneinander anordnen */
+    justify-content: center;     /* Buttons zentrieren */
+    gap: 30px;                   /* Abstand zwischen den Buttons. Einstellbar: Pixelwert */
+    margin-top: 12px;            /* Abstand zwischen Text und Buttons. Einstellbar: Pixelwert */
+}
+
+.bonus-buttons button {          /* Die beiden Buttons im Dialog */
+    font-family: inherit;        /* Übernimmt die Schriftart der Seite */
+    font-weight: bold;           /* Fettdruck. Einstellbar: normal oder bold */
+    font-size: clamp(0.7rem, 3vw, 0.95rem); /* Schriftgröße der Buttons. Einstellbar: Minimum 0.7rem, 3vw = 3% der Breite, Maximum 0.95rem */
+    flex: 1;                     /* Beide Buttons teilen sich die Breite gleichmäßig */
+    border: 0;                   /* Kein Rahmen. Einstellbar: z.B. 1px solid #fff */
+    padding: 8px 16px;           /* Innenabstand in den Buttons: 8px oben/unten, 16px links/rechts. Einstellbar: Pixelwerte */
+    border-radius: 4px;          /* Rundung der Ecken. Einstellbar: 0 = eckig, 8px = runder */
+    background-color: var(--key-bg); /* Buttonfarbe (aus Abschnitt 1) */
+    color: var(--text-color); /* Beschriftungsfarbe: Grün (aus Abschnitt 1) */
+    cursor: pointer;             /* Handzeiger bei Maus-Bedienung am PC */
+    user-select: none;           /* Beschriftung kann nicht markiert werden */
+    touch-action: manipulation;  /* Verhindert Doppeltipp-Zoom beim schnellen Tippen auf Handys. Nicht ändern */
+    -webkit-tap-highlight-color: transparent; /* Entfernt das graue Aufblitzen beim Antippen auf iPhones/Android */
 }

@@ -7,8 +7,9 @@ const currentDay = parseInt(urlParams.get('day')) || 1;
 const today = DAYS[currentDay] || Object.values(DAYS)[0];
 const targetWord = today.word;
 
-/* Spielregeln-Konstanten: 6 Versuche (Zeilen) und 5 Buchstaben pro Wort (Spalten) */
-const ROWS = 6;
+/* Spielregeln-Konstanten: 6 normale Versuche + 1 versteckter Bonusversuch (Zeilen) und 5 Buchstaben pro Wort (Spalten) */
+const ROWS = 6;             // Anzahl der normalen Versuche (darauf bauen "Last try" und die Siegesnachrichten auf)
+const TOTAL_ROWS = ROWS + 1; // Anzahl aller Zeilen im Raster: normale Versuche + 1 Bonuszeile
 const COLS = 5;
 let currentRow = 0;        // Zeigt an, in welcher Zeile gerade getippt wird
 let currentCol = 0;        // Zeigt an, in welcher Spalte der nächste Buchstabe landet
@@ -16,6 +17,7 @@ let currentGuess = "";     // Speichert das aktuell eingegebene Wort als Textstr
 let isGameOver = false;    // Statusvariable: True, wenn das Spiel gewonnen oder verloren ist
 let savedGuesses = [];     // Alle bereits abgeschickten Versuche (werden im Handy-Speicher gesichert)
 let lastRandomMessage = "";  // Zuletzt zufällig gewählte Nachricht, damit sie nicht direkt wiederholt wird
+let isWaitingForBonus = false; // Statusvariable: True zwischen dem 6. Fehlversuch und dem Schließen des Bonus-Dialogs (Eingabe gesperrt)
 
 /* ==========================================================================
    SPIELSTAND SPEICHERN
@@ -58,24 +60,32 @@ function loadState() {
     return [];
 }
 
-/* Funktion: Spielt alle gespeicherten Versuche noch einmal ab (ohne sie erneut zu speichern) */
+/* Funktion: Spielt alle gespeicherten Versuche noch einmal ab (ohne sie erneut zu speichern).
+   applyGuess bekommt dabei isRestoring = true, damit z. B. der Bonus-Dialog nicht erneut aufgeht */
 function restoreState() {
     savedGuesses = loadState();
     for (const guess of savedGuesses) {
         if (isGameOver) break;
-        applyGuess(guess);
+        applyGuess(guess, true);
     }
 }
 
-/* HTML-Elemente für das Spielfeld und die Nachrichtenbox im Code verfügbar machen */
+/* HTML-Elemente für Spielfeld, Nachrichtenbox und Bonus-Dialog im Code verfügbar machen */
 const board = document.getElementById("board");
 const messageContainer = document.getElementById("message-container");
+const bonusDialog = document.getElementById("bonus-dialog");     // Das ganze Dialogfenster (zum Öffnen/Schließen)
+const bonusText = document.getElementById("bonus-text");         // Nur der Textabsatz im Dialog
+const bonusButton1 = document.getElementById("bonus-button-1");  // Linker Button im Dialog
+const bonusButton2 = document.getElementById("bonus-button-2");  // Rechter Button im Dialog
 
-/* Funktion: Erstellt das 6x5-Raster beim Laden der Seite dynamisch im HTML */
+/* Funktion: Erstellt das Raster (6 normale Zeilen + 1 versteckte Bonuszeile, je 5 Kacheln) beim Laden der Seite dynamisch im HTML */
 function initBoard() {
-    for (let r = 0; r < ROWS; r++) {
+    for (let r = 0; r < TOTAL_ROWS; r++) {
         const row = document.createElement("div");
         row.classList.add("row");
+        if (r === TOTAL_ROWS - 1) {
+            row.classList.add("bonus-row"); // Letzte Zeile = Bonuszeile (per CSS versteckt, bis sie die Klasse "revealed" bekommt)
+        }
         for (let c = 0; c < COLS; c++) {
             const tile = document.createElement("div");
             tile.classList.add("tile");
@@ -93,7 +103,7 @@ function showMessage(msg) {
 
 /* Funktion: Fügt einen getippten Buchstaben in die aktuelle Kachel ein */
 function addLetter(letter) {
-    if (isGameOver || currentCol >= COLS) return; // Nichts tun, wenn Spiel vorbei oder Zeile voll
+    if (isGameOver || isWaitingForBonus || currentCol >= COLS) return; // Nichts tun, wenn Spiel vorbei, Warten auf Bonus-Dialog oder Zeile voll
     const tile = document.getElementById(`tile-${currentRow}-${currentCol}`);
     tile.textContent = letter;
     currentGuess += letter;
@@ -102,7 +112,7 @@ function addLetter(letter) {
 
 /* Funktion: Löscht den letzten Buchstaben (Backspace / ⌫) */
 function deleteLetter() {
-    if (isGameOver || currentCol <= 0) return; // Nichts tun, wenn Spiel vorbei oder Zeile leer
+    if (isGameOver || isWaitingForBonus || currentCol <= 0) return; // Nichts tun, wenn Spiel vorbei, Warten auf Bonus-Dialog oder Zeile leer
     currentCol--;
     const tile = document.getElementById(`tile-${currentRow}-${currentCol}`);
     tile.textContent = "";
@@ -119,6 +129,21 @@ function shakeRow() {
     }, { once: true });
 }
 
+/* Funktion: Macht die versteckte Bonuszeile (letzte Zeile im Raster) sichtbar.
+   Die Klasse "revealed" schaltet in style.css "visibility: hidden" wieder auf sichtbar */
+function revealBonusRow() {
+    const bonusRow = board.children[TOTAL_ROWS - 1];
+    bonusRow.classList.add("revealed");
+}
+
+/* Funktion: Wird von BEIDEN Buttons im Bonus-Dialog aufgerufen (beide tun absichtlich dasselbe):
+   Dialog schließen und die Bonuszeile einblenden */
+function closeBonusDialog() {
+    isWaitingForBonus = false; // Bonusversuch ist jetzt freigeschaltet
+    bonusDialog.close();
+    revealBonusRow();
+}
+
 /* Funktion: Wählt eine zufällige Nachricht aus der übergebenen Liste.
    Dieselbe Nachricht kommt nie zweimal direkt hintereinander (außer die Liste hat nur einen Eintrag) */
 function randomMessage(list) {
@@ -132,7 +157,7 @@ function randomMessage(list) {
 
 /* Funktion: Überprüft das eingegebene Wort nach dem Drücken von ENTER */
 function submitGuess() {
-    if (isGameOver) return;
+    if (isGameOver || isWaitingForBonus) return; // Nichts tun, wenn Spiel vorbei oder Warten auf Bonus-Dialog
     
     // Prüfen, ob die Zeile komplett mit 5 Buchstaben gefüllt ist
     if (currentGuess.length < COLS) {
@@ -149,28 +174,40 @@ function submitGuess() {
 /* Funktion: Entscheidet, welche Nachricht nach einem Versuch im Popup erscheint, und gibt sie zurück.
    Zeigt selbst nichts an und ändert nichts am Spiel. Wird aufgerufen, NACHDEM applyGuess den
    Spielzustand (currentRow) aktualisiert hat. Die Texte stehen in config.js.
-   Reihenfolge der Prüfung ist wichtig: Sieg vor Niederlage vor letztem Versuch vor Aufmunterung. */
+   Reihenfolge: erst die beiden Spielenden (Sieg, Niederlage), dann die Zwischenstände vom
+   spätesten zum frühesten (Bonus, letzter Versuch), zuletzt die normale Aufmunterung.
+   Jeder Fall endet mit return, deshalb ist kein else nötig. */
 function messageAfterGuess(guess) {
-    // Gewonnen: Bei einem Sieg wird currentRow nicht erhöht, ist also 0 beim 1. Versuch,
-    // 1 beim 2. Versuch usw. Das passt direkt als Position in WIN_MESSAGES
+    // 1. Gewonnen (muss zuerst kommen, auch ein Sieg im 6. oder 7. Versuch ist ein Sieg).
+    //    Bei einem Sieg wird currentRow nicht erhöht, ist also 0 beim 1. Versuch,
+    //    1 beim 2. Versuch usw. Das passt direkt als Position in WIN_MESSAGES
     if (guess === targetWord) {
         return WIN_MESSAGES[currentRow];
     }
-    // Alle Zeilen aufgebraucht: verloren (wird mit dem Bonusversuch angepasst)
-    if (currentRow >= ROWS) {
-        return `The word was: ${targetWord}`;
+    // 2. Auch der Bonusversuch falsch (currentRow = 7 = TOTAL_ROWS): verloren.
+    //    .replace() ersetzt den Platzhalter {WORD} durch das Lösungswort
+    if (currentRow >= TOTAL_ROWS) {
+        return LOSS_MESSAGE.replace("{WORD}", targetWord);
     }
-    // Nur noch eine Zeile übrig (nach dem 5. Versuch ist currentRow = 5 = ROWS - 1)
+    // 3. 6. Versuch falsch (currentRow = 6 = ROWS): Nachricht zum Bonusversuch, der Dialog folgt verzögert
+    if (currentRow === ROWS) {
+        return BONUS.popup;
+    }
+    // 4. Nur noch eine (scheinbar letzte) Zeile übrig (nach dem 5. Versuch ist currentRow = 5 = ROWS - 1)
     if (currentRow === ROWS - 1) {
         return LAST_TRY_MESSAGE;
     }
-    // Sonst: zufällige Aufmunterung
+    // 5. Sonst: zufällige Aufmunterung
     return randomMessage(ENCOURAGEMENTS);
 }
 
-/* Funktion: Wertet einen Versuch aus, färbt die Zeile und prüft auf Sieg oder Niederlage.
-   Wird beim normalen Spielen UND beim Wiederherstellen des Spielstands benutzt. */
-function applyGuess(guess) {
+/* Funktion: Wertet einen Versuch aus, färbt die Zeile und prüft auf Sieg, Bonusversuch oder Niederlage.
+   Wird beim normalen Spielen UND beim Wiederherstellen des Spielstands benutzt.
+   - guess:       das abgeschickte Wort
+   - isRestoring: true, wenn der Versuch beim Neuladen aus dem Speicher abgespielt wird
+                  (dann z. B. kein Bonus-Dialog). Standardwert false = normales Spielen,
+                  deshalb reicht in submitGuess der Aufruf applyGuess(currentGuess) */
+function applyGuess(guess, isRestoring = false) {
     const targetArray = targetWord.split("");
     const guessArray = guess.split("");
     const statuses = Array(COLS).fill("absent"); // Standardmäßig alles grau markieren
@@ -208,8 +245,23 @@ function applyGuess(guess) {
         currentRow++;
         currentCol = 0;
         currentGuess = "";
-        // Alle Zeilen aufgebraucht: Spiel verloren
-        if (currentRow >= ROWS) {
+        if (currentRow === ROWS) {
+            // 6. Versuch falsch: Bonusversuch vorbereiten
+            if (!isRestoring) {
+                // Beim normalen Spielen: Eingabe sperren und den Bonus-Dialog nach der Wartezeit
+                // aus config.js (BONUS.delay) öffnen. Die Sperre hebt closeBonusDialog() wieder auf
+                isWaitingForBonus = true;
+                setTimeout(() => {
+                    bonusDialog.showModal(); // Dialogfenster öffnen (mit Text und Buttons aus config.js)
+                }, BONUS.delay);
+            } else {
+                // Beim Wiederherstellen (Neuladen): Den Dialog hat sie schon gesehen, daher keine Sperre
+                // und kein Dialog, sondern die Bonuszeile direkt einblenden. Gilt für alle Fälle nach
+                // 6 Fehlversuchen (Dialog offen/geschlossen, Bonusversuch gespielt oder nicht)
+                revealBonusRow();
+            }
+        } else if (currentRow === TOTAL_ROWS) {
+            // Auch der Bonusversuch (7.) falsch: alle Zeilen aufgebraucht, Spiel verloren
             isGameOver = true;
         }
     }
@@ -242,6 +294,11 @@ document.querySelectorAll("#keyboard button").forEach(button => {
     });
 });
 
+/* Event-Listener: Beide Buttons im Bonus-Dialog rufen dieselbe Funktion auf.
+   Wichtig: closeBonusDialog OHNE Klammern übergeben, damit sie erst beim Klick ausgeführt wird */
+bonusButton1.addEventListener("click", closeBonusDialog);
+bonusButton2.addEventListener("click", closeBonusDialog);
+
 /* Event-Listener: Lauscht auf physische Tastatureingaben (falls am Laptop/PC gespielt wird) */
 document.addEventListener("keydown", (e) => {
     const key = e.key.toUpperCase();
@@ -265,7 +322,12 @@ function handleInput(key) {
     }
 }
 
-/* Spiel initialisieren: Das leere Spielfeld aufbauen, Startnachricht anzeigen und gespeicherten Spielstand wiederherstellen */
+/* Spiel initialisieren: Das leere Spielfeld aufbauen, Texte setzen und gespeicherten Spielstand wiederherstellen */
 initBoard();
 showMessage(today.start);
+// Texte des Bonus-Dialogs aus config.js einsetzen (in den Absatz, NICHT in den ganzen Dialog,
+// sonst würden die Buttons überschrieben)
+bonusText.textContent = BONUS.dialog;
+bonusButton1.textContent = BONUS.button1;
+bonusButton2.textContent = BONUS.button2;
 restoreState();

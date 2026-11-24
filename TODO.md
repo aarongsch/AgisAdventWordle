@@ -64,12 +64,13 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [ ] Optional: mehrere Pools je nach Fortschritt (Anzahl grüner/gelber Buchstaben), aus denen jeweils zufällig gewählt wird
 
 ### Bonusversuch (versteckte 7. Reihe)
-- [ ] Das Raster bekommt eine 7. Reihe, die zunächst unsichtbar ist, aber ihren Platz schon belegt (zwischen Reihe 6 und Tastatur); das Raster darf dafür etwas kleiner werden
-- [ ] Nach dem 6. Fehlversuch öffnet sich ein Dialogfenster mit einer im Code einstellbaren Nachricht
-- [ ] Der Dialog hat 2 Buttons (Beschriftung im Code einstellbar), die beide dasselbe tun: Dialog schließen und die 7. Reihe einblenden
-- [ ] Danach kann man den Bonusversuch in Reihe 7 spielen; erst wenn auch der scheitert, gilt das Spiel als verloren
-- [ ] Eigene Niederlage-Nachricht in `config.js` (kommt erst nach dem gescheiterten Bonusversuch, ersetzt „The word was: …“)
-- [ ] Der Bonusversuch wird im gespeicherten Spielstand berücksichtigt
+- [x] Das Raster bekommt eine 7. Reihe, die zunächst unsichtbar ist, aber ihren Platz schon belegt (zwischen Reihe 6 und Tastatur); das Raster darf dafür etwas kleiner werden
+- [x] Nach dem 6. Fehlversuch öffnet sich ein Dialogfenster mit einer im Code einstellbaren Nachricht
+- [x] Der Dialog erscheint mit einstellbarer Verzögerung (z. B. 2 Sekunden); in der Wartezeit ist keine Eingabe möglich
+- [x] Der Dialog hat 2 Buttons (Beschriftung im Code einstellbar), die beide dasselbe tun: Dialog schließen und die 7. Reihe einblenden
+- [x] Danach kann man den Bonusversuch in Reihe 7 spielen; erst wenn auch der scheitert, gilt das Spiel als verloren
+- [x] Eigene Niederlage-Nachricht in `config.js` (kommt erst nach dem gescheiterten Bonusversuch, ersetzt „The word was: …“)
+- [x] Der Bonusversuch wird im gespeicherten Spielstand berücksichtigt (beim Neuladen nach 6 Fehlversuchen ist die 7. Reihe direkt sichtbar, kein erneuter Dialog)
 
 ### Verbesserungen am bestehenden Code
 - [x] Bug behoben: Eine alte Meldung konnte eine neue zu früh ausblenden → Timer entfernt, jede Nachricht bleibt stehen, bis eine neue sie ablöst

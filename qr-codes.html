@@ -83,7 +83,7 @@
                 text: link,                              // was im QR-Code steckt: der Link
                 width: 512,                              // Pixel (groß für scharfen Druck, echte Größe bestimmt das CSS)
                 height: 512,
-                correctLevel: QRCode.CorrectLevel.M      // Fehlerkorrektur: lesbar auch bei leichten Knicken/Flecken
+                correctLevel: QRCode.CorrectLevel.H      // Höchste Fehlerkorrektur (ca. 30 %): lesbar auch bei Knicken/Flecken
             });
 
             // Fertiges Kästchen in den Container auf der Seite hängen. Erst jetzt wird es sichtbar

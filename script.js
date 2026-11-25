@@ -18,6 +18,14 @@ for (const day in DAYS) {
 const today = DAYS[currentDay];
 const targetWord = today?.word; // "?." = nur auf .word zugreifen, wenn today existiert, sonst undefined (statt Absturz)
 
+/* Alle Lösungswörter aus DAYS zusätzlich als gültige Wörter zulassen.
+   Nötig, weil manche nicht in der Wortliste (words.js) stehen, z. B. SANTA (Eigenname).
+   Ohne das könnte sie ihr eigenes Lösungswort nicht eingeben.
+   Steht ein Wort schon im Set, passiert bei .add() nichts (ein Set enthält jedes Wort nur einmal) */
+for (const day in DAYS) {
+    VALID_WORDS.add(DAYS[day].word); // Wort des Tages, den die Schleife gerade durchläuft (nicht nur das von heute)
+}
+
 /* Spielregeln-Konstanten: 6 normale Versuche + 1 versteckter Bonusversuch (Zeilen) und 5 Buchstaben pro Wort (Spalten) */
 const ROWS = 6;             // Anzahl der normalen Versuche (darauf bauen "Last try" und die Siegesnachrichten auf)
 const TOTAL_ROWS = ROWS + 1; // Anzahl aller Zeilen im Raster: normale Versuche + 1 Bonuszeile
@@ -183,6 +191,16 @@ function submitGuess() {
     if (currentGuess.length < COLS) {
         shakeRow();
         return;
+    }
+
+    /* Prüfen, ob das Wort in der Wortliste steht (words.js + Lösungswörter, siehe oben).
+       Muss NACH der Längenprüfung kommen (sonst käme bei zu kurzen Wörtern diese Meldung statt nur Wackeln)
+       und VOR dem Speichern (damit ein ungültiges Wort nicht als Versuch zählt) */
+    if (!VALID_WORDS.has(currentGuess)) {
+        // "!" dreht die Bedingung um: Wort ist NICHT in der Liste → Zeile wackeln lassen und Nachricht zeigen
+        shakeRow();
+        showMessage(NOT_IN_LIST_MESSAGE);
+        return; // Abbrechen: Versuch wird nicht gespeichert, Buchstaben bleiben zum Korrigieren stehen
     }
 
     /* Versuch merken und sofort im Handy-Speicher sichern, dann auswerten */

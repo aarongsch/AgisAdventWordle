@@ -51,9 +51,9 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [x] Wird das Wort eines Tages im Code geändert, startet dieser Tag automatisch neu
 
 ### Wortprüfung
-- [ ] Nur echte englische Wörter mit 5 Buchstaben als Versuch zulassen (frei verfügbare Wortliste)
-- [ ] Ungültiges Wort: Meldung „Not in word list“, der Versuch zählt nicht
-- [ ] Die eigenen Lösungswörter werden immer akzeptiert, auch wenn sie nicht in der Liste stehen
+- [x] Nur echte englische Wörter mit 5 Buchstaben als Versuch zulassen (ENABLE-Wortliste, gemeinfrei, 8.636 Wörter in `words.js`)
+- [x] Ungültiges Wort: Zeile wackelt, Meldung `NOT_IN_LIST_MESSAGE` (einstellbar in `config.js`), der Versuch zählt nicht
+- [x] Die eigenen Lösungswörter werden immer akzeptiert, auch wenn sie nicht in der Liste stehen (z. B. SANTA)
 
 ### Nachrichten im Popup
 - [x] Eigene Startnachricht pro Tag, die beim Öffnen des Wordles angezeigt wird

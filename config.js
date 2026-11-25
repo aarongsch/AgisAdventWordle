@@ -135,7 +135,6 @@ const BONUS = {
 const LOSS_MESSAGE = "Oopsie, the word was {WORD}.";
 
 
-
 /* --------------------------------------------------------------------------
    UNGÜLTIGER LINK: Wird im Popup angezeigt, wenn der Link keinen oder einen
    unbekannten Code enthält (z. B. abgetippt, verändert oder ohne "?t=...").
@@ -143,3 +142,11 @@ const LOSS_MESSAGE = "Oopsie, the word was {WORD}.";
    - Maximal 2 Zeilen auf dem Handy, also ca. 60 Zeichen.
    -------------------------------------------------------------------------- */
 const INVALID_LINK_MESSAGE = "Hmm, this door isn't open yet… 🎁";
+
+
+/* --------------------------------------------------------------------------
+   UNBEKANNTES WORT: Wird im Popup angezeigt, wenn das eingegebene Wort nicht
+   in der Wortliste (words.js) steht. Der Versuch zählt dann nicht.
+   - Maximal 2 Zeilen auf dem Handy, also ca. 60 Zeichen.
+   -------------------------------------------------------------------------- */
+const NOT_IN_LIST_MESSAGE = "Not a real word, Ági.";

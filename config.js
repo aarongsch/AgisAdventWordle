@@ -114,7 +114,7 @@ const LAST_TRY_MESSAGE = "LAST CHANCE ÁGI!";
    - dialog:  Text im Dialogfenster. Darf etwas länger sein.
    - button1: Beschriftung des linken Buttons.
    - button2: Beschriftung des rechten Buttons.
-   - delay:   Wartezeit nach dem 6. Fehlversuch, bis sich der Dialog öffnet.
+   - delay:   Wartezeit nach dem Aufdecken des 6. Fehlversuchs, bis sich der Dialog öffnet.
               In Millisekunden: 1000 = 1 Sekunde. Solange ist keine Eingabe möglich.
    -------------------------------------------------------------------------- */
 const BONUS = {

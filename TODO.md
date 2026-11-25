@@ -85,7 +85,7 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [x] Zu kurzes Wort: Zeile wackelt (Shake-Animation) statt Meldung „Not enough letters!“
 - [x] Nachrichtenfeld nicht mehr per Klasse `hidden` steuern, sondern automatisch ausblenden, solange es leer ist (`:empty`)
 - [ ] Optional: Lesbarkeit prüfen – weiße Schrift auf hellem Gold ist evtl. schwer zu lesen (dunklere Schrift oder dunkleres Gold)
-- [ ] Animation beim Aufdecken der Buchstaben (Kacheln drehen sich nacheinander um und zeigen dabei ihre Farbe)
+- [x] Animation beim Aufdecken der Buchstaben (Kacheln drehen sich nacheinander um und zeigen dabei ihre Farbe)
 - [ ] Optional: Animation beim Sieg
 
 ### Bilder, Sticker und GIFs

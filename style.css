@@ -250,6 +250,16 @@ header h1 {                      /* Der Titeltext selbst */
     animation: shake 0.4s;       /* Spielt die Animation "shake" einmal ab. Einstellbar: Dauer, z.B. 0.6s = langsamer */
 }
 
+@keyframes flip {               /* Aufdeck-Animation: Kachel dreht sich um die waagerechte Achse */
+    0%   { transform: rotateX(0deg); }   /* Start: Kachel liegt normal */
+    50%  { transform: rotateX(90deg); }  /* Hochkant = unsichtbar. Genau jetzt setzt script.js die Farbe */
+    100% { transform: rotateX(0deg); }   /* Ende: Kachel liegt wieder normal, jetzt mit Farbe */
+}
+
+.tile.flip {                     /* Kachel, die gerade aufgedeckt wird (Klasse setzt applyGuess in script.js) */
+    animation: flip 500ms ease;  /* Spielt "flip" einmal ab. Dauer muss zu FLIP_DURATION in script.js passen */
+}
+
 
 /* ==========================================================================
    9. BILDSCHIRMTASTATUR

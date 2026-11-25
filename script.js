@@ -22,6 +22,10 @@ const targetWord = today?.word; // "?." = nur auf .word zugreifen, wenn today ex
 const ROWS = 6;             // Anzahl der normalen Versuche (darauf bauen "Last try" und die Siegesnachrichten auf)
 const TOTAL_ROWS = ROWS + 1; // Anzahl aller Zeilen im Raster: normale Versuche + 1 Bonuszeile
 const COLS = 5;
+
+/* Aufdeck-Animation: Kacheln drehen sich nacheinander um und zeigen dabei ihre Farbe */
+const FLIP_DURATION = 500;  // Dauer einer Kachel-Drehung in ms (muss zu ".tile.flip" in style.css passen)
+const FLIP_DELAY = 300;     // Abstand zwischen dem Start zweier Kacheln in ms
 let currentRow = 0;        // Zeigt an, in welcher Zeile gerade getippt wird
 let currentCol = 0;        // Zeigt an, in welcher Spalte der nächste Buchstabe landet
 let currentGuess = "";     // Speichert das aktuell eingegebene Wort als Textstring
@@ -227,6 +231,9 @@ function applyGuess(guess, isRestoring = false) {
     const targetArray = targetWord.split("");
     const guessArray = guess.split("");
     const statuses = Array(COLS).fill("absent"); // Standardmäßig alles grau markieren
+    // Zeit, bis die letzte Kachel fertig aufgedeckt ist: Die letzte Kachel startet nach (COLS - 1) * FLIP_DELAY
+    // und braucht dann noch FLIP_DURATION. Beim Wiederherstellen gibt es keine Animation, also 0
+    const revealTime = isRestoring ? 0 : (COLS - 1) * FLIP_DELAY + FLIP_DURATION;
 
     /* 1. Durchgang: Nach exakten Treffern suchen (Grün / correct) */
     for (let i = 0; i < COLS; i++) {
@@ -244,12 +251,25 @@ function applyGuess(guess, isRestoring = false) {
         }
     }
 
-    /* Kacheln im Spielfeld beschriften und färben, Tasten auf der Bildschirmtastatur entsprechend färben */
+    /* Kacheln im Spielfeld beschriften und färben (die Tastatur wird erst nach dem Aufdecken gefärbt, siehe unten) */
     for (let i = 0; i < COLS; i++) {
         const tile = document.getElementById(`tile-${currentRow}-${i}`);
         tile.textContent = guessArray[i]; // nötig beim Wiederherstellen, da die Kachel dann noch leer ist
-        tile.classList.add(statuses[i]);
-        updateKeyboardColor(guessArray[i], statuses[i]);
+
+        if (isRestoring) {
+            // Beim Neuladen: sofort färben, ohne Animation
+            tile.classList.add(statuses[i]);
+        } else {
+            // Beim Spielen: Kachel i startet nach i * FLIP_DELAY (also von links nach rechts nacheinander)
+            setTimeout(() => {
+                tile.classList.add("flip"); // Drehung starten (Animation "flip" in style.css)
+                // Nach der halben Drehung steht die Kachel hochkant (unsichtbar): genau dann die Farbe setzen.
+                // Die Klasse "flip" bleibt dran, sonst würde die Drehung mittendrin abbrechen
+                setTimeout(() => {
+                    tile.classList.add(statuses[i]);
+                }, FLIP_DURATION / 2);
+            }, i * FLIP_DELAY);
+        }
     }
 
     /* Spielzustand aktualisieren */
@@ -269,7 +289,7 @@ function applyGuess(guess, isRestoring = false) {
                 isWaitingForBonus = true;
                 setTimeout(() => {
                     bonusDialog.showModal(); // Dialogfenster öffnen (mit Text und Buttons aus config.js)
-                }, BONUS.delay);
+                }, revealTime + BONUS.delay); // erst Aufdeck-Animation, dann Wartezeit aus config.js, dann Dialog
             } else {
                 // Beim Wiederherstellen (Neuladen): Den Dialog hat sie schon gesehen, daher keine Sperre
                 // und kein Dialog, sondern die Bonuszeile direkt einblenden. Gilt für alle Fälle nach
@@ -282,8 +302,24 @@ function applyGuess(guess, isRestoring = false) {
         }
     }
 
-    /* Passende Nachricht zum neuen Spielzustand anzeigen */
-    showMessage(messageAfterGuess(guess));
+    /* Passende Nachricht zum NEUEN Spielzustand bestimmen. Muss hier stehen (nach dem Aktualisieren von
+       currentRow), aber schon JETZT berechnet werden und nicht erst im Timer: Tippt sie während der
+       Animation schon das nächste Wort, hätte sich currentRow bis dahin wieder geändert */
+    const message = messageAfterGuess(guess);
+
+    /* Hilfsfunktion: Alles, was erst NACH dem Aufdecken passieren soll (Tastatur färben, Nachricht zeigen) */
+    const finishReveal = () => {
+        for (let i = 0; i < COLS; i++) {
+            updateKeyboardColor(guessArray[i], statuses[i]);
+        }
+        showMessage(message);
+    };
+
+    if (isRestoring) {
+        finishReveal();                         // Beim Neuladen: sofort, ohne auf eine Animation zu warten
+    } else {
+        setTimeout(finishReveal, revealTime);   // Beim Spielen: erst wenn die letzte Kachel fertig ist
+    }
 }
 
 /* Funktion: Färbt die Tasten auf der Bildschirmtastatur ein (Grün hat Vorrang vor Gelb/Gold, Gelb/Gold vor Grau) */

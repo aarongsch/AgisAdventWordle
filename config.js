@@ -25,32 +25,38 @@
             in den Dialogen, nicht in den Popup-Nachrichten oben.
    - Nur Tage, die hier stehen, haben ein Wordle. Ein neuer Tag braucht
      nur eine neue Zeile (Komma am Zeilenende nicht vergessen).
+   - PLATZHALTER: Tage mit "(Platzhalter, keine Karte)" haben schon einen Code,
+     ihre QR-Karte kommt aber (noch) nicht ins Türchen. So kann man später
+     ein Wordle daraus machen, ohne neu drucken zu müssen: einfach Wort und
+     Texte anpassen, den Kommentar entfernen und die Karte ins Türchen legen.
+     Auch Platzhalter brauchen ein echtes Wort, denn alle Lösungswörter
+     gelten automatisch als gültige Eingabe.
    - Wird das Wort eines Tages geändert, startet der gespeicherte Spielstand
      dieses Tages neu.
    -------------------------------------------------------------------------- */
 const DAYS = {
-    /* 1: Christmas Deko */
+    1:  { code: "e3zclnwg", word: "BELLS", start: "..." }, // Christmas Deko (Platzhalter, keine Karte)
     2:  { code: "vv5wqhmw", word: "HEART", start: "Hello", intro: "Oh? Hoho SANTA What's this? PRESENT\nIt seems to be your very own\n✨ Christmas Wordle ✨\n\nMerry Christmas Ági and enjoy! CHRISTMASTREE" },
     3:  { code: "nph27ccs", word: "SNOWY", start: "Guten Morgen Sonnenschein! SUN" },
     4:  { code: "xk9zr8yv", word: "ANGEL", start: "..." },
-    /* 5: Fenster Stift */
+    5:  { code: "80qexlj4", word: "CAROL", start: "..." }, // Fenster Stift (Platzhalter, keine Karte)
     6:  { code: "7g8j2b3d", word: "GIFTS", start: "..." },
-    /* 7: Picture + Pins */
+    7:  { code: "7h5qbhqx", word: "GLOWS", start: "..." }, // Picture + Pins (Platzhalter, keine Karte)
     8:  { code: "qj4m2p1l", word: "LIGHT", start: "..." },
     9:  { code: "kz3f8v5n", word: "FROST", start: "..." },
-    /* 10: Scented Candle */
+    10: { code: "w66sqmcl", word: "CHEER", start: "..." }, // Scented Candle (Platzhalter, keine Karte)
     11: { code: "wf7t3n4s", word: "SANTA", start: "..." },
     12: { code: "bq5v8k2m", word: "ELVES", start: "..." },
-    /* 13: Little Reindeer */
+    13: { code: "vdkkxsfs", word: "FEAST", start: "..." }, // Little Reindeer (Platzhalter, keine Karte)
     14: { code: "dr8u5v2c", word: "MAGIC", start: "..." },
     15: { code: "xj2k9b7m", word: "CANDY", start: "..." },
-    /* 16: Sweets */
+    16: { code: "2jldpus6", word: "TREES", start: "..." }, // Sweets (Platzhalter, keine Karte)
     17: { code: "yq3v8n5k", word: "SUGAR", start: "..." },
     18: { code: "p8v3n6s4", word: "COOKY", start: "..." },
-    /* 19: Stickers */
+    19: { code: "5hkfkmq7", word: "SLEDS", start: "..." }, // Stickers (Platzhalter, keine Karte)
     20: { code: "pm6y9k4x", word: "SWEET", start: "..." },
     21: { code: "h7k2v5n8", word: "FROST", start: "..." },
-    /* 22: Nailpolish */
+    22: { code: "zyv6i1da", word: "JOLLY", start: "..." }, // Nailpolish (Platzhalter, keine Karte)
     23: { code: "r5n8k2v3", word: "MERRY", start: "..." },
     24: { code: "6e6yanjd", word: "LOVED", start: "...", intro: "I hope you enjoyed your Christmas Wordle!" },
 };

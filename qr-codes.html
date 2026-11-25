@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>QR-Codes Adventskalender</title>
+    <style>
+        body {
+            font-family: sans-serif;     /* schlichte Schrift */
+            margin: 1cm;                 /* Rand um die ganze Seite */
+        }
+
+        #codes {
+            display: grid;                              /* Kästchen in einem Raster anordnen */
+            grid-template-columns: repeat(4, 4.2cm);    /* 4 Spalten à 4,2 cm nebeneinander */
+            gap: 0.4cm;                                 /* Abstand zwischen den Kästchen */
+        }
+
+        .card {
+            border: 1px dashed #999;     /* gestrichelte graue Schnittlinie */
+            padding: 0.4cm;              /* weißer Rand um den QR-Code (Ruhezone), nicht wegschneiden */
+            text-align: center;          /* Beschriftung und Code mittig */
+            break-inside: avoid;         /* Kästchen nie über zwei Druckseiten verteilen */
+        }
+
+        .label {
+            font-weight: bold;
+            margin-bottom: 0.2cm;        /* Abstand zwischen "Door 3" und dem Code */
+        }
+
+        .qr img,
+        .qr canvas {
+            width: 3cm;                  /* Druckgröße des QR-Codes. Einstellbar, mindestens ca. 2,5cm */
+            height: 3cm;
+            margin: 0 auto;              /* Code horizontal zentrieren (text-align wirkt bei Block-Elementen nicht) */
+        }
+
+        @media print {
+            h1 { display: none; }        /* Überschrift nur auf dem Bildschirm, nicht auf dem Papier */
+        }
+    </style>
+</head>
+
+<body>
+    <h1>QR-Codes für den Adventskalender</h1>
+
+    <!-- Hier erzeugt das Script die Kästchen mit den QR-Codes -->
+    <div id="codes"></div>
+
+    <!-- QR-Bibliothek: fremder, fertiger Code, der aus einem Text ein QR-Bild macht -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Deine Tage mit den Codes -->
+    <script src="config.js"></script>
+
+    <script>
+        // Adresse des Spiels auf GitHub Pages. Daran wird später "?t=<Code>" gehängt
+        const BASE_URL = "https://aarongsch.github.io/AgisAdventWordle/";
+
+        // Der leere Container im HTML, in den alle Kästchen kommen
+        const container = document.getElementById("codes");
+
+        // Für jeden Tag in DAYS (aus config.js) ein Kästchen mit QR-Code erzeugen
+        for (const day in DAYS) {
+            // Link für diesen Tag, z. B. "https://.../AgisAdventWordle/?t=vv5wqhmw"
+            const link = `${BASE_URL}?t=${DAYS[day].code}`;
+
+            // Ein Kästchen für diesen Tag (Aussehen über die Klasse "card" im CSS)
+            const card = document.createElement("div");
+            card.classList.add("card");
+
+            // Beschriftung "Door 3" oben im Kästchen (Nummer des Türchens)
+            const label = document.createElement("div");
+            label.classList.add("label");
+            label.textContent = `Door ${day}`;
+            card.appendChild(label);
+
+            // Leerer Platz, in den die Bibliothek gleich das QR-Bild zeichnet
+            const qrPlace = document.createElement("div");
+            qrPlace.classList.add("qr");
+            card.appendChild(qrPlace);
+
+            // QR-Code mit der Bibliothek erzeugen und in qrPlace zeichnen
+            new QRCode(qrPlace, {
+                text: link,                              // was im QR-Code steckt: der Link
+                width: 512,                              // Pixel (groß für scharfen Druck, echte Größe bestimmt das CSS)
+                height: 512,
+                correctLevel: QRCode.CorrectLevel.M      // Fehlerkorrektur: lesbar auch bei leichten Knicken/Flecken
+            });
+
+            // Fertiges Kästchen in den Container auf der Seite hängen. Erst jetzt wird es sichtbar
+            container.appendChild(card);
+        }
+    </script>
+</body>
+</html>

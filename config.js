@@ -29,13 +29,29 @@
      dieses Tages neu.
    -------------------------------------------------------------------------- */
 const DAYS = {
-    1:  { code: "vv5wqhmw", word: "HEART", start: "Hello", intro: "Oh? Hoho SANTA What's this? PRESENT\nIt seems to be your very own\n✨ Christmas Wordle ✨\n\nMerry Christmas Ági and enjoy! CHRISTMASTREE" },
+    /* 1: Christmas Deko */
+    2:  { code: "vv5wqhmw", word: "HEART", start: "Hello", intro: "Oh? Hoho SANTA What's this? PRESENT\nIt seems to be your very own\n✨ Christmas Wordle ✨\n\nMerry Christmas Ági and enjoy! CHRISTMASTREE" },
     3:  { code: "nph27ccs", word: "SNOWY", start: "Guten Morgen Sonnenschein! SUN" },
-    5:  { code: "xk9zr8yv", word: "ANGEL", start: "..." },
+    4:  { code: "xk9zr8yv", word: "ANGEL", start: "..." },
+    /* 5: Fenster Stift */
+    6:  { code: "7g8j2b3d", word: "GIFTS", start: "..." },
+    /* 7: Picture + Pins */
     8:  { code: "qj4m2p1l", word: "LIGHT", start: "..." },
-    12: { code: "wf7t3n4s", word: "SANTA", start: "..." },
-    15: { code: "dr8u5v2c", word: "MAGIC", start: "..." },
+    9:  { code: "kz3f8v5n", word: "FROST", start: "..." },
+    /* 10: Scented Candle */
+    11: { code: "wf7t3n4s", word: "SANTA", start: "..." },
+    12: { code: "bq5v8k2m", word: "ELVES", start: "..." },
+    /* 13: Little Reindeer */
+    14: { code: "dr8u5v2c", word: "MAGIC", start: "..." },
+    15: { code: "xj2k9b7m", word: "CANDY", start: "..." },
+    /* 16: Sweets */
+    17: { code: "yq3v8n5k", word: "SUGAR", start: "..." },
+    18: { code: "p8v3n6s4", word: "COOKY", start: "..." },
+    /* 19: Stickers */
     20: { code: "pm6y9k4x", word: "SWEET", start: "..." },
+    21: { code: "h7k2v5n8", word: "FROST", start: "..." },
+    /* 22: Nailpolish */
+    23: { code: "r5n8k2v3", word: "MERRY", start: "..." },
     24: { code: "6e6yanjd", word: "LOVED", start: "...", intro: "I hope you enjoyed your Christmas Wordle!" },
 };
 

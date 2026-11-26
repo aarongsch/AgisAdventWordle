@@ -34,6 +34,9 @@ const COLS = 5;
 /* Aufdeck-Animation: Kacheln drehen sich nacheinander um und zeigen dabei ihre Farbe */
 const FLIP_DURATION = 500;  // Dauer einer Kachel-Drehung in ms (muss zu ".tile.flip" in style.css passen)
 const FLIP_DELAY = 300;     // Abstand zwischen dem Start zweier Kacheln in ms
+/* Sieges-Animation: Kacheln der Gewinnzeile hüpfen nacheinander (siehe celebrate()) */
+const BOUNCE_DURATION = 400; // Dauer eines Hüpfers in ms (muss zu ".tile.bounce" in style.css passen, dient als Hinweis)
+const BOUNCE_DELAY = 100;    // Abstand zwischen dem Start zweier hüpfender Kacheln in ms
 let currentRow = 0;        // Zeigt an, in welcher Zeile gerade getippt wird
 let currentCol = 0;        // Zeigt an, in welcher Spalte der nächste Buchstabe landet
 let currentGuess = "";     // Speichert das aktuell eingegebene Wort als Textstring
@@ -162,6 +165,32 @@ function shakeRow() {
 function revealBonusRow() {
     const bonusRow = board.children[TOTAL_ROWS - 1];
     bonusRow.classList.add("revealed");
+}
+
+/* Funktion: Sieges-Animation. Lässt die Kacheln der Gewinnzeile nacheinander hüpfen und Konfetti fliegen.
+   Wird von applyGuess aufgerufen, wenn das Wort erraten wurde, und zwar erst nach dem Aufdecken
+   und nur beim echten Spielen (nicht beim Wiederherstellen nach dem Neuladen) */
+function celebrate() {
+    // 1. Kacheln der Gewinnzeile nacheinander hüpfen lassen (von links nach rechts, wie beim Aufdecken).
+    //    currentRow zeigt nach einem Sieg noch auf die Gewinnzeile, da es dann nicht erhöht wird
+    for (let i = 0; i < COLS; i++) {
+        const tile = document.getElementById(`tile-${currentRow}-${i}`);
+        setTimeout(() => {
+            tile.classList.add("bounce"); // Hüpfen starten (Animation "bounce" in style.css)
+        }, i * BOUNCE_DELAY);             // Kachel i startet nach i * BOUNCE_DELAY
+    }
+
+    // 2. Konfetti mit der Bibliothek aus index.html (canvas-confetti).
+    //    Sicherheitsprüfung: Konnte die Bibliothek nicht geladen werden (z. B. schlechtes Netz),
+    //    gibt es die Funktion confetti nicht. Dann einfach ohne Konfetti weiter, statt mit Fehler abzubrechen
+    if (typeof confetti === "function") {
+        confetti({
+            particleCount: CONFETTI.amount, // Anzahl der Stücke (aus config.js)
+            colors:        CONFETTI.colors, // Farben (aus config.js)
+            spread: 50,                     // Wie weit es sich auffächert, in Grad. Einstellbar: z.B. 180 = breiter
+            origin: { y: 0.78 },            // Startpunkt: 0 = oberer Rand, 1 = unterer Rand (0.78 = etwa auf Höhe der unteren Rasterzeilen)
+        });
+    }
 }
 
 /* Funktion: Wird von BEIDEN Buttons im Bonus-Dialog aufgerufen (beide tun absichtlich dasselbe):
@@ -294,6 +323,11 @@ function applyGuess(guess, isRestoring = false) {
     if (guess === targetWord) {
         // Gewonnen: Spiel beenden (currentRow bleibt auf der Gewinnzeile stehen)
         isGameOver = true;
+        // Sieges-Animation nur beim echten Spielen, sonst käme bei jedem Neuladen eines gelösten Tages Konfetti.
+        // Erst nach revealTime, also wenn die letzte Kachel fertig aufgedeckt ist
+        if (!isRestoring) {
+            setTimeout(celebrate, revealTime); // Funktion direkt übergeben (ohne Klammern), wie bei finishReveal
+        }
     } else {
         // Nicht gewonnen: in die nächste Zeile springen
         currentRow++;

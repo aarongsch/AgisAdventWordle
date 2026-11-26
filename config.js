@@ -156,3 +156,19 @@ const INVALID_LINK_MESSAGE = "Hmm, this door isn't open yet… 🎁";
    - Maximal 2 Zeilen auf dem Handy, also ca. 60 Zeichen.
    -------------------------------------------------------------------------- */
 const NOT_IN_LIST_MESSAGE = "Not a real word, Ági.";
+
+
+/* --------------------------------------------------------------------------
+   KONFETTI: Fliegt über den Bildschirm, wenn das Wort erraten wurde
+   (direkt nach dem Aufdecken, gleichzeitig mit den hüpfenden Kacheln).
+   Kommt nur beim Gewinnen selbst, nicht beim erneuten Öffnen eines schon
+   gelösten Tages.
+   - colors: Farben der Konfetti-Stücke als Hex-Farbcodes in Anführungszeichen,
+             beliebig viele, mit Komma getrennt.
+   - amount: Anzahl der Konfetti-Stücke. Mehr = dichter, aber auf älteren
+             Handys evtl. ruckelig. Sinnvoll: ca. 100 bis 300.
+   -------------------------------------------------------------------------- */
+const CONFETTI = {
+    colors: ["#e5c158", "#538d4e", "#c0392b", "#ffffff"], // Gold, Grün, Rot, Weiß
+    amount: 150,                                           // Anzahl der Konfetti-Stücke
+};

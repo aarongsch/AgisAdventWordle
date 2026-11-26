@@ -260,6 +260,19 @@ header h1 {                      /* Der Titeltext selbst */
     animation: flip 500ms ease;  /* Spielt "flip" einmal ab. Dauer muss zu FLIP_DURATION in script.js passen */
 }
 
+@keyframes bounce {              /* Sieges-Animation: Kachel hüpft einmal hoch und federt zurück */
+    0%, 100% { transform: translateY(0); }      /* Start und Ende: normaler Platz */
+    40%      { transform: translateY(-30%); }   /* Ganz oben. % = Anteil der Kachelhöhe (negativ = nach oben). Einstellbar: z.B. -50% = höher */
+    60%      { transform: translateY(5%); }     /* Kurz unter die Ausgangslinie, wirkt federnd */
+}
+
+/* Kachel, die gerade hüpft (Klasse setzt celebrate() in script.js).
+   MUSS UNTER ".tile.flip" STEHEN: Die Kacheln behalten die Klasse "flip". Beide Regeln sind gleich stark,
+   bei gleicher Stärke gewinnt die weiter unten stehende. Stünde diese Regel oben, würde nichts hüpfen */
+.tile.bounce {
+    animation: bounce 400ms ease; /* Spielt "bounce" einmal ab. Dauer muss zu BOUNCE_DURATION in script.js passen */
+}
+
 
 /* ==========================================================================
    9. BILDSCHIRMTASTATUR

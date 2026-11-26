@@ -504,8 +504,30 @@ if (today) {
     if ((today.intro || today.introImage) && savedGuesses.length === 0) {
         introText.textContent = today.intro; // Ohne intro-Text undefined: textContent bleibt dann einfach leer
         introButton.textContent = INTRO_BUTTON;
-        // Bild nur setzen, wenn der Tag eins hat (sonst bleibt es per CSS ausgeblendet, siehe Bonus-Bild oben)
+        // Nur an Tagen mit Bild: Button sperren, bis das Bild geladen ist (damit sie den Dialog nicht
+        // wegtippt, bevor das GIF erscheint). Ohne Bild bleibt der Button sofort klickbar
         if (today.introImage) {
+            // 1. Button sperren (style.css zeigt ihn dann halb durchsichtig, siehe ":disabled")
+            introButton.disabled = true;
+
+            // 2. Hilfsfunktion zum Entsperren. Wird bis zu zweimal aufgerufen (Bild geladen + Timer),
+            //    das ist harmlos: disabled ein zweites Mal auf false zu setzen ändert nichts
+            const unlockIntroButton = () => {
+                introButton.disabled = false;
+            };
+
+            // 3. Entsperren, sobald das Bild fertig geladen ist ("load" löst der Browser automatisch aus)
+            introImage.addEventListener("load", unlockIntroButton, { once: true });
+
+            // 4. Auch entsperren, wenn das Bild NICHT geladen werden kann (z. B. Tippfehler im Dateinamen),
+            //    sonst müsste sie ohne Grund die volle Wartezeit warten
+            introImage.addEventListener("error", unlockIntroButton, { once: true });
+
+            // 5. Spätestens nach INTRO_BUTTON_MAX_WAIT (config.js) entsperren, falls das Laden sehr lange dauert
+            setTimeout(unlockIntroButton, INTRO_BUTTON_MAX_WAIT);
+
+            // 6. Erst JETZT das Bild setzen: Damit startet der Download. Die Listener oben sind dann schon bereit,
+            //    so wird "load" sicher nicht verpasst. Ohne Bild bleibt es per CSS ausgeblendet (":not([src])")
             introImage.src = today.introImage;
         }
         introDialog.showModal();

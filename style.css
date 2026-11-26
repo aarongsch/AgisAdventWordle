@@ -382,4 +382,10 @@ header h1 {                      /* Der Titeltext selbst */
     user-select: none;           /* Beschriftung kann nicht markiert werden */
     touch-action: manipulation;  /* Verhindert Doppeltipp-Zoom beim schnellen Tippen auf Handys. Nicht ändern */
     -webkit-tap-highlight-color: transparent; /* Entfernt das graue Aufblitzen beim Antippen auf iPhones/Android */
+    transition: opacity 0.3s;    /* Weiches Ein-/Ausblenden beim Aktivieren/Deaktivieren. Einstellbar: Dauer, z.B. 0.5s = langsamer */
+}
+
+.dialog-buttons button:disabled { /* Gesperrter Button (gilt automatisch, solange script.js "disabled" setzt, z. B. bis das GIF im Begrüßungs-Dialog geladen ist) */
+    opacity: 0.4;                /* Halb durchsichtig, damit man sieht, dass er noch nicht geht. Einstellbar: 0 = unsichtbar, 1 = normal */
+    cursor: default;             /* Kein Handzeiger bei Maus-Bedienung am PC */
 }

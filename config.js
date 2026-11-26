@@ -79,6 +79,17 @@ const INTRO_BUTTON = "Let's go!";
 
 
 /* --------------------------------------------------------------------------
+   BEGRÜSSUNGS-DIALOG MIT BILD: Hat ein Tag ein "introImage", ist der Button
+   zuerst gesperrt (halb durchsichtig), damit der Dialog nicht weggetippt wird,
+   bevor das Bild/GIF erscheint. Er wird freigegeben, sobald das Bild geladen
+   ist, spätestens aber nach dieser Wartezeit (falls das Handynetz langsam ist).
+   - In Millisekunden: 1000 = 1 Sekunde.
+   - Tage ohne Bild: Button sofort klickbar.
+   -------------------------------------------------------------------------- */
+const INTRO_BUTTON_MAX_WAIT = 2000;
+
+
+/* --------------------------------------------------------------------------
    AUFMUNTERUNGEN: Nach jedem Versuch (außer bei Sieg/Niederlage) wird
    zufällig eine dieser Nachrichten im Popup angezeigt.
    - Maximal 2 Zeilen auf dem Handy, also ca. 60 Zeichen pro Nachricht.

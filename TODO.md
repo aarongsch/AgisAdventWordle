@@ -10,7 +10,6 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [ ] Jeden Link auf dem Handy über GitHub Pages prüfen (jede Karte einmal scannen, danach mit `&reset` den Spielstand wieder löschen)
 - [ ] Echte Texte in `config.js`: Wörter und Startnachrichten der Wordle-Tage, Aufmunterungen, Siegesnachrichten, Bonus-Dialog, Begrüßungs-Dialoge
 - [ ] Längste Nachrichten (vor allem mit Emojis) auf kleinem Handy prüfen (iPhone SE in der Device Toolbar): passen sie in 2 Zeilen? Emojis sind breiter als Buchstaben
-- [ ] Begrüßungs-Dialog: Button erst nach ca. 1 Sekunde klickbar machen, damit das GIF laden kann (Idee: Button gesperrt, bis das Bild geladen ist, mit 1 Sekunde als Obergrenze)
 - [ ] **GANZ ZUM SCHLUSS: Push-Benachrichtigungen einschalten** (`NOTIFY.enabled: true` in `config.js`), committen, pushen und einmal auf dem Handy prüfen
 
 ### Bilder, Sticker und GIFs (fertig, nur noch Bilder aussuchen)
@@ -83,6 +82,7 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [x] Erscheint nur, solange an dem Tag noch kein Versuch gemacht wurde
 - [x] Zeilenumbrüche mit `\n` in den Dialogtexten
 - [x] Gemeinsames Aussehen mit dem Bonus-Dialog (CSS-Klasse `game-dialog`)
+- [x] Mit Bild: Button gesperrt (halb durchsichtig), bis das Bild geladen ist, spätestens nach `INTRO_BUTTON_MAX_WAIT` (config.js)
 
 ### Eingabe
 - [x] Bildschirmtastatur (QWERTY) mit ENTER und ⌫

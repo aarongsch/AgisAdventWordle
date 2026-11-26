@@ -11,12 +11,13 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [ ] Echte Texte in `config.js`: Wörter und Startnachrichten der Wordle-Tage, Aufmunterungen, Siegesnachrichten, Bonus-Dialog, Begrüßungs-Dialoge
 - [ ] Längste Nachrichten (vor allem mit Emojis) auf kleinem Handy prüfen (iPhone SE in der Device Toolbar): passen sie in 2 Zeilen? Emojis sind breiter als Buchstaben
 
-### Optional: Bilder, Sticker und GIFs
+### Bilder, Sticker und GIFs (fertig, nur noch Bilder aussuchen)
+- [ ] Passende Sticker/GIFs für die Tage und den Bonus-Dialog aussuchen, in `img/` legen und in `config.js` eintragen
 - [x] Entschieden: Bilder/Sticker/GIFs nur in den Dialogen (Begrüßungs-Dialog pro Tag, Bonus-Dialog), nicht im Popup oben
-- [ ] Ordner für Bilddateien im Projekt anlegen (z. B. `img/`) und die Dateien dort ablegen (GIF, WebP z. B. WhatsApp-Sticker, PNG); auf kleine Dateigrößen achten, da auf dem Handy geladen
-- [ ] In `config.js` pro Nachricht bzw. Dialog optional ein Bild angeben können (Dateiname)
-- [ ] HTML/JavaScript: Bild-Element (`<img>`) im Dialog bzw. Popup, das nur angezeigt wird, wenn ein Bild angegeben ist
-- [ ] CSS: Größe der Bilder begrenzen, damit sie auf jedem Handy passen
+- [x] Ordner für Bilddateien im Projekt anlegen (z. B. `img/`) und die Dateien dort ablegen (GIF, WebP z. B. WhatsApp-Sticker, PNG); auf kleine Dateigrößen achten, da auf dem Handy geladen
+- [x] In `config.js` optional ein Bild angeben: `introImage` pro Tag, `image` im Bonus-Dialog
+- [x] HTML/JavaScript: Bild-Element (`<img>`) in beiden Dialogen, das nur angezeigt wird, wenn ein Bild angegeben ist; der Begrüßungs-Dialog öffnet sich auch nur mit Bild ohne Text
+- [x] CSS: Größe der Bilder begrenzen, damit sie auf jedem Handy passen
 
 ### Optional: Kalender mit allen bisherigen Tagen
 - [ ] Kleine Extra-Seite (z. B. `calendar.html`), auf der man alle bisher gespielten Wörter mit der Anzahl der benötigten Versuche sieht

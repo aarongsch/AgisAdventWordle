@@ -188,7 +188,7 @@ function celebrate() {
             particleCount: CONFETTI.amount, // Anzahl der Stücke (aus config.js)
             colors:        CONFETTI.colors, // Farben (aus config.js)
             spread: 50,                     // Wie weit es sich auffächert, in Grad. Einstellbar: z.B. 180 = breiter
-            origin: { y: 0.78 },            // Startpunkt: 0 = oberer Rand, 1 = unterer Rand (0.78 = etwa auf Höhe der unteren Rasterzeilen)
+            origin: { y: 0.85 },            // Startpunkt: 0 = oberer Rand, 1 = unterer Rand (0.85 = etwa auf Höhe der Tastatur)
         });
     }
 }

@@ -44,28 +44,28 @@
      dieses Tages neu.
    -------------------------------------------------------------------------- */
 const DAYS = {
-    1:  { code: "e3zclnwg", word: "BELLS", start: "...", introImage: "img/guten-morgen-sonnenschein.gif" }, // Christmas Deko (Platzhalter, keine Karte)
+    1:  { code: "e3zclnwg", word: "BELLS", start: "...", introImage: "img/guten-morgen-sonnenschein.gif" }, // Christmas Deko
     2:  { code: "vv5wqhmw", word: "HEART", start: "Hello", intro: "Oh? Hoho SANTA What's this? PRESENT\nIt seems to be your very own\n✨ Christmas Wordle ✨\n\nMerry Christmas Ági and enjoy! CHRISTMASTREE" },
     3:  { code: "nph27ccs", word: "SNOWY", start: "Guten Morgen Sonnenschein! SUN" },
     4:  { code: "xk9zr8yv", word: "ANGEL", start: "..." },
-    5:  { code: "80qexlj4", word: "PAINT", start: "Today I have a little something for you!\nMaybe today's word is a clue?" }, // Fenster Stift (Platzhalter, keine Karte)
+    5:  { code: "80qexlj4", word: "PAINT", start: "Today I have a little something for you!\nMaybe today's word is a clue?" }, // Fenster Stift
     6:  { code: "7g8j2b3d", word: "GIFTS", start: "..." },
-    7:  { code: "7h5qbhqx", word: "CHEER", start: "..." }, // Picture + Pins (Platzhalter, keine Karte)
+    7:  { code: "7h5qbhqx", word: "CHEER", start: "..." }, // Picture + Pins
     8:  { code: "qj4m2p1l", word: "FEAST", start: "..." },
     9:  { code: "kz3f8v5n", word: "FROST", start: "..." },
-    10: { code: "w66sqmcl", word: "GLOWS", start: "..." }, // Scented Candle (Platzhalter, keine Karte) ADD HINT
+    10: { code: "w66sqmcl", word: "GLOWS", start: "..." }, // Scented Candle ADD HINT
     11: { code: "wf7t3n4s", word: "SANTA", start: "..." },
     12: { code: "bq5v8k2m", word: "ELVES", start: "..." },
-    13: { code: "vdkkxsfs", word: "DEERS", start: "..." }, // Little Reindeer (Platzhalter, keine Karte) ADD HINT
+    13: { code: "vdkkxsfs", word: "DEERS", start: "..." }, // Little Reindeer ADD HINT
     14: { code: "dr8u5v2c", word: "MAGIC", start: "..." },
     15: { code: "xj2k9b7m", word: "TREES", start: "..." },
-    16: { code: "2jldpus6", word: "CANDY", start: "..." }, // Sweets (Platzhalter, keine Karte)
+    16: { code: "2jldpus6", word: "CANDY", start: "..." }, // Sweets
     17: { code: "yq3v8n5k", word: "SUGAR", start: "..." },
     18: { code: "p8v3n6s4", word: "SLEDS", start: "..." },
-    19: { code: "5hkfkmq7", word: "STICK", start: "Is there anything else in the calendar?\nGo check after solving!" }, // Stickers (Platzhalter, keine Karte)
+    19: { code: "5hkfkmq7", word: "STICK", start: "Is there anything else in the calendar?\nGo check after solving!" }, // Stickers
     20: { code: "pm6y9k4x", word: "SWEET", start: "..." },
     21: { code: "h7k2v5n8", word: "FROST", start: "..." },
-    22: { code: "zyv6i1da", word: "NAILS", start: "Another clue today!\nWhat could you be in the calendar today?!" }, // Nailpolish (Platzhalter, keine Karte)
+    22: { code: "zyv6i1da", word: "NAILS", start: "Another clue today!\nWhat could be in the calendar today?!" }, // Nailpolish
     23: { code: "r5n8k2v3", word: "MERRY", start: "..." },
     24: { code: "6e6yanjd", word: "LOVED", start: "...", intro: "I hope you enjoyed your Christmas Wordle!" },
 };
@@ -184,4 +184,23 @@ const NOT_IN_LIST_MESSAGE = "Not a real word, Ági.";
 const CONFETTI = {
     colors: ["#e5c158", "#538d4e", "#c0392b", "#ffffff"], // Gold, Grün, Rot, Weiß
     amount: 150,                                           // Anzahl der Konfetti-Stücke
+};
+
+
+/* --------------------------------------------------------------------------
+   PUSH-BENACHRICHTIGUNGEN: Schickt mir über ntfy.sh eine Nachricht aufs
+   Handy (App "ntfy", dort das Topic abonnieren), wenn sie
+   - den ersten Versuch eines Tages abschickt,
+   - gewinnt (mit Anzahl der Versuche) oder verliert.
+   Beim Neuladen eines schon gespielten Tages kommt keine Nachricht.
+   - enabled: true = an, false = aus. BEIM EIGENEN TESTEN AUF false STELLEN,
+              sonst löst jeder Test eine Nachricht aus. Vor dem 1.12. wieder
+              auf true stellen (steht auch in TODO.md).
+   - topic:   Name des Kanals in der ntfy-App. Nur Buchstaben, Ziffern, - und _.
+              Wer den Namen kennt, kann mitlesen, also schwer erratbar wählen
+              und nichts Privates in die Nachrichten schreiben.
+   -------------------------------------------------------------------------- */
+const NOTIFY = {
+    enabled: true,                    // false = keine Benachrichtigungen (z. B. beim eigenen Testen)
+    topic:   "agis-advent-wordle-g5zm2i3i7j",  // dein Topic aus der ntfy-App
 };

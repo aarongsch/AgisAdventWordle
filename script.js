@@ -195,6 +195,21 @@ function celebrate() {
     }
 }
 
+/* Funktion: Schickt eine Push-Benachrichtigung über ntfy.sh an mein Handy (App "ntfy", Topic aus config.js).
+   Wird nur aus submitGuess aufgerufen, also nur beim echten Spielen, nie beim Wiederherstellen nach dem Neuladen.
+   Das Spiel wartet nicht auf die Antwort: fetch läuft im Hintergrund, nichts ruckelt */
+function notify(text) {
+    // Benachrichtigungen in config.js ausgeschaltet (z. B. beim eigenen Testen): nichts tun
+    if (!NOTIFY.enabled) return;
+
+    // Nachricht an ntfy.sh schicken. Jeder, der an diese Adresse schreibt, löst eine Push-Nachricht
+    // bei allen aus, die das Topic in der ntfy-App abonniert haben
+    fetch(`https://ntfy.sh/${NOTIFY.topic}`, {
+        method: "POST",   // POST = Daten an den Server schicken (statt etwas abzurufen)
+        body: text,       // Der Text der Benachrichtigung
+    }).catch(() => {});   // Fehler (z. B. kein Netz) still ignorieren, eine verpasste Benachrichtigung ist nicht schlimm
+}
+
 /* Funktion: Wird von BEIDEN Buttons im Bonus-Dialog aufgerufen (beide tun absichtlich dasselbe):
    Dialog schließen und die Bonuszeile einblenden */
 function closeBonusDialog() {
@@ -238,6 +253,28 @@ function submitGuess() {
     savedGuesses.push(currentGuess);
     saveState();
     applyGuess(currentGuess);
+
+    /* Push-Benachrichtigungen an mich (siehe notify). Hier in submitGuess, weil diese Funktion nur läuft,
+       wenn sie selbst ENTER drückt, nie beim Wiederherstellen. Steht NACH applyGuess, weil applyGuess
+       isGameOver sofort setzt (nicht erst im Timer), so ist hier schon bekannt, ob das Spiel vorbei ist */
+
+    // Das zuletzt eingegebene Wort. NICHT currentGuess nehmen: applyGuess leert es bei einem Fehlversuch schon
+    const lastGuess = savedGuesses[savedGuesses.length - 1];
+
+    // Erster Versuch des Tages: Sie hat mit dem Wordle angefangen
+    if (savedGuesses.length === 1) {
+        notify(`Wordle of day ${currentDay} started.`);
+    }
+
+    // Spiel vorbei: gewonnen oder verloren (mit Anzahl der Versuche bzw. dem Lösungswort).
+    // Bewusst ein eigenes if und kein "else if": Gewinnt sie im 1. Versuch, kommen beide Nachrichten
+    if (isGameOver) {
+        if (lastGuess === targetWord) {
+            notify(`Wordle of day ${currentDay} solved in ${savedGuesses.length} tries!`);
+        } else {
+            notify(`Wordle of day ${currentDay} failed. The word was ${targetWord}.`);
+        }
+    }
 }
 
 /* Funktion: Entscheidet, welche Nachricht nach einem Versuch im Popup erscheint, und gibt sie zurück.

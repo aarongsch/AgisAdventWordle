@@ -10,6 +10,8 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [ ] Jeden Link auf dem Handy über GitHub Pages prüfen (jede Karte einmal scannen, danach mit `&reset` den Spielstand wieder löschen)
 - [ ] Echte Texte in `config.js`: Wörter und Startnachrichten der Wordle-Tage, Aufmunterungen, Siegesnachrichten, Bonus-Dialog, Begrüßungs-Dialoge
 - [ ] Längste Nachrichten (vor allem mit Emojis) auf kleinem Handy prüfen (iPhone SE in der Device Toolbar): passen sie in 2 Zeilen? Emojis sind breiter als Buchstaben
+- [ ] Begrüßungs-Dialog: Button erst nach ca. 1 Sekunde klickbar machen, damit das GIF laden kann (Idee: Button gesperrt, bis das Bild geladen ist, mit 1 Sekunde als Obergrenze)
+- [ ] **GANZ ZUM SCHLUSS: Push-Benachrichtigungen einschalten** (`NOTIFY.enabled: true` in `config.js`), committen, pushen und einmal auf dem Handy prüfen
 
 ### Bilder, Sticker und GIFs (fertig, nur noch Bilder aussuchen)
 - [ ] Passende Sticker/GIFs für die Tage und den Bonus-Dialog aussuchen, in `img/` legen und in `config.js` eintragen
@@ -22,10 +24,6 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 ### Optional: Kalender mit allen bisherigen Tagen
 - [ ] Kleine Extra-Seite (z. B. `calendar.html`), auf der man alle bisher gespielten Wörter mit der Anzahl der benötigten Versuche sieht
 - [ ] Die Daten kommen aus den gespeicherten Spielständen im Handy-Speicher (`agis-wordle-day-N`); nur Tage anzeigen, die schon gespielt wurden
-
-### Optional: Benachrichtigungen per ntfy
-- [ ] Push-Nachricht an mich über ntfy.sh (App aufs Handy, zufälliges Topic abonnieren), wenn sie den ersten Versuch eines Tages abschickt und wenn sie gewinnt/verliert (mit Anzahl der Versuche)
-- [ ] Keine Nachricht beim Wiederherstellen des Spielstands (`isRestoring`) und ein Schalter in `config.js`, um die Benachrichtigungen beim eigenen Testen abzuschalten
 
 ### Optional: Sonstiges
 - [ ] Mehrere Pools für die Aufmunterungen je nach Fortschritt (Anzahl grüner/gelber Buchstaben), aus denen jeweils zufällig gewählt wird
@@ -51,10 +49,14 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 
 ### Tage, Links und QR-Codes
 - [x] Alle Inhalte (Wörter, Texte, Codes) stehen in `config.js` in `DAYS`, die Spiellogik in `script.js`
-- [x] Alle 24 Tage haben einen Code: 16 echte Wordle-Tage und 8 Platzhalter-Tage („Platzhalter, keine Karte“), damit später ohne Neudruck weitere Tage dazukommen können
+- [x] Alle 24 Tage haben einen Code und ein Wordle (anfangs 8 davon als Platzhalter, inzwischen alle echte Tage)
 - [x] Jeder Tag wird über einen zufälligen, nicht erratbaren Code im Link gewählt (`?t=vv5wqhmw`), damit man andere Tage nicht durch Ändern einer Zahl aufrufen kann (keine Verschlüsselung, die Wörter dürfen im Quelltext stehen)
 - [x] Ungültiger oder fehlender Code: freundliche Meldung (`INVALID_LINK_MESSAGE`), Spielfeld und Tastatur ausgeblendet
 - [x] Druckseite `qr-codes.html`: erzeugt für jeden Tag eine Karte „Door N“ mit QR-Code (3 cm, Karte ca. 4,2 × 4,5 cm, gestrichelte Schnittlinie), höchste Fehlerkorrektur (H), damit auch geknickte Codes lesbar bleiben
+
+### Push-Benachrichtigungen (ntfy)
+- [x] Push-Nachricht an mich über ntfy.sh, wenn sie den ersten Versuch eines Tages abschickt und wenn sie gewinnt (mit Anzahl der Versuche) oder verliert
+- [x] Keine Nachricht beim Wiederherstellen des Spielstands; Schalter `NOTIFY.enabled` in `config.js` zum Abschalten beim Testen
 
 ### Spielstand
 - [x] Spielstand pro Tag im Handy-Speicher (Versuche, Farben, Tastatur, Sieg/Niederlage, Bonusreihe), damit Neuladen nichts zurücksetzt

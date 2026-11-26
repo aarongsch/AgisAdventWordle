@@ -12,7 +12,7 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [ ] Längste Nachrichten (vor allem mit Emojis) auf kleinem Handy prüfen (iPhone SE in der Device Toolbar): passen sie in 2 Zeilen? Emojis sind breiter als Buchstaben
 
 ### Optional: Bilder, Sticker und GIFs
-- [ ] Entscheiden, wo Sticker/GIFs erscheinen sollen: in den Dialogen (empfohlen, die wachsen mit) und/oder klein im Popup oben (dort nur ca. Emoji-Größe, da feste Höhe für 2 Textzeilen)
+- [x] Entschieden: Bilder/Sticker/GIFs nur in den Dialogen (Begrüßungs-Dialog pro Tag, Bonus-Dialog), nicht im Popup oben
 - [ ] Ordner für Bilddateien im Projekt anlegen (z. B. `img/`) und die Dateien dort ablegen (GIF, WebP z. B. WhatsApp-Sticker, PNG); auf kleine Dateigrößen achten, da auf dem Handy geladen
 - [ ] In `config.js` pro Nachricht bzw. Dialog optional ein Bild angeben können (Dateiname)
 - [ ] HTML/JavaScript: Bild-Element (`<img>`) im Dialog bzw. Popup, das nur angezeigt wird, wenn ein Bild angegeben ist

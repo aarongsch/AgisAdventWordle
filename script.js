@@ -103,11 +103,13 @@ const messageContainer = document.getElementById("message-container");
 const introDialog = document.getElementById("intro-dialog");     // Begrüßungs-Dialog: das ganze Fenster (zum Öffnen/Schließen)
 const introText = document.getElementById("intro-text");         // Begrüßungs-Dialog: nur der Textabsatz
 const introButton = document.getElementById("intro-button");     // Begrüßungs-Dialog: Button zum Schließen
+const introImage = document.getElementById("intro-image");       // Begrüßungs-Dialog: Bild/Sticker
 
 const bonusDialog = document.getElementById("bonus-dialog");     // Bonus-Dialog: das ganze Fenster (zum Öffnen/Schließen)
 const bonusText = document.getElementById("bonus-text");         // Bonus-Dialog: nur der Textabsatz
 const bonusButton1 = document.getElementById("bonus-button-1");  // Bonus-Dialog: linker Button
 const bonusButton2 = document.getElementById("bonus-button-2");  // Bonus-Dialog: rechter Button
+const bonusImage = document.getElementById("bonus-image");       // Bonus-Dialog: Bild/Sticker
 
 /* Funktion: Erstellt das Raster (6 normale Zeilen + 1 versteckte Bonuszeile, je 5 Kacheln) beim Laden der Seite dynamisch im HTML */
 function initBoard() {
@@ -447,16 +449,28 @@ if (today) {
     bonusText.textContent = BONUS.dialog;
     bonusButton1.textContent = BONUS.button1;
     bonusButton2.textContent = BONUS.button2;
+    // Bild des Bonus-Dialogs nur setzen, wenn eins angegeben ist (fehlt es oder ist es "", zählt das als falsch).
+    // Ohne das if stünde in src "undefined", dann greift ":not([src])" in style.css nicht und man sähe ein kaputtes Bild.
+    // Schon jetzt beim Start setzen: Der Browser lädt das Bild sofort, so ist es da, wenn der Dialog später aufgeht
+    if (BONUS.image) {
+        bonusImage.src = BONUS.image;
+    }
 
     // Gespeicherten Spielstand wiederherstellen
     restoreState();
 
-    /* Begrüßungs-Dialog öffnen, wenn der Tag in config.js ein "intro" hat (fehlt es, ist today.intro
-       undefined und zählt als falsch) UND noch kein Versuch gemacht wurde. Muss NACH restoreState()
-       stehen, weil savedGuesses erst dort aus dem Speicher geladen wird */
-    if (today.intro && savedGuesses.length === 0) {
-        introText.textContent = today.intro;
+    /* Begrüßungs-Dialog öffnen, wenn der Tag in config.js ein "intro" ODER ein "introImage" hat (fehlt ein
+       Feld, ist es undefined und zählt als falsch) UND noch kein Versuch gemacht wurde.
+       Die Klammern um das ODER (||) sind nötig: && bindet stärker als ||. Ohne Klammern ginge der Dialog
+       bei einem intro-Text bei JEDEM Neuladen auf, auch mitten im Spiel.
+       Muss NACH restoreState() stehen, weil savedGuesses erst dort aus dem Speicher geladen wird */
+    if ((today.intro || today.introImage) && savedGuesses.length === 0) {
+        introText.textContent = today.intro; // Ohne intro-Text undefined: textContent bleibt dann einfach leer
         introButton.textContent = INTRO_BUTTON;
+        // Bild nur setzen, wenn der Tag eins hat (sonst bleibt es per CSS ausgeblendet, siehe Bonus-Bild oben)
+        if (today.introImage) {
+            introImage.src = today.introImage;
+        }
         introDialog.showModal();
     }
 } else {

@@ -344,6 +344,17 @@ header h1 {                      /* Der Titeltext selbst */
     white-space: pre-line;       /* Text bricht automatisch um, \n im Text (config.js) erzeugt einen Zeilenumbruch. Nur hier und nicht im ganzen Dialog, sonst würden die Zeilenumbrüche im HTML-Code als Leerzeilen angezeigt */
 }
 
+.dialog-image {                  /* Bild/Sticker/GIF in einem Dialog (Datei kommt aus config.js, gesetzt in script.js) */
+    display: block;              /* Eigene Zeile, damit margin: auto zentrieren kann */
+    max-width: 60%;              /* Höchstens 60 % der Dialogbreite. Einstellbar: z.B. 80% = größer */
+    max-height: 30dvh;           /* Höchstens 30 % der Bildschirmhöhe, damit der Dialog nie zu hoch wird. Einstellbar: z.B. 40dvh */
+    margin: 0 auto 12px;         /* Zentriert, 12px Abstand zum Text darunter. Einstellbar: 12px */
+}                                /* Das Bild wird nur verkleinert (Seitenverhältnis bleibt), nie vergrößert */
+
+.dialog-image:not([src]) {       /* Bild ohne src-Attribut, also wenn in config.js kein Bild angegeben ist */
+    display: none;               /* Dann ganz ausblenden (kein kaputtes Bild-Symbol, keine Lücke). Gleiche Idee wie :empty beim Popup */
+}
+
 .game-dialog::backdrop {         /* Fläche hinter dem geöffneten Dialog, dunkelt das Spiel ab (erzeugt der Browser automatisch) */
     background-color: rgba(0, 0, 0, 0.5); /* Schwarz mit 50% Deckkraft. Einstellbar: RGB + Deckkraft */
 }

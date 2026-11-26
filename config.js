@@ -19,10 +19,19 @@
             Maximal 2 Zeilen auf dem Handy, also ca. 60 Zeichen.
    - intro: OPTIONAL. Text für ein Dialogfenster, das beim Öffnen des Wordles
             erscheint (nur solange an dem Tag noch kein Versuch gemacht wurde).
-            Darf länger sein. Fehlt das Feld, gibt es an dem Tag keinen Dialog.
+            Darf länger sein. Fehlen "intro" UND "introImage", gibt es an dem Tag
+            keinen Dialog.
             Eigene Zeilenumbrüche mit \n, eine Leerzeile mit \n\n
             (z. B. "Hallo!\nSchön, dass du da bist."). Das funktioniert nur
             in den Dialogen, nicht in den Popup-Nachrichten oben.
+   - introImage: OPTIONAL. Bild/Sticker/GIF im Begrüßungs-Dialog, über dem Text.
+            Pfad zur Datei im Ordner img, z. B. "img/santa.gif".
+            Der Dialog öffnet sich auch, wenn es nur ein Bild und keinen
+            "intro"-Text gibt (dann nur Bild und Button).
+            Dateinamen nur klein, ohne Leerzeichen und Umlaute: GitHub Pages
+            unterscheidet Groß-/Kleinschreibung, der Mac nicht. Falsch
+            geschrieben funktioniert es nur lokal, nicht auf dem Handy.
+            Dateien möglichst unter 1-2 MB, da sie übers Handynetz geladen werden.
    - Nur Tage, die hier stehen, haben ein Wordle. Ein neuer Tag braucht
      nur eine neue Zeile (Komma am Zeilenende nicht vergessen).
    - PLATZHALTER: Tage mit "(Platzhalter, keine Karte)" haben schon einen Code,
@@ -35,7 +44,7 @@
      dieses Tages neu.
    -------------------------------------------------------------------------- */
 const DAYS = {
-    1:  { code: "e3zclnwg", word: "BELLS", start: "..." }, // Christmas Deko (Platzhalter, keine Karte)
+    1:  { code: "e3zclnwg", word: "BELLS", start: "...", introImage: "img/guten-morgen-sonnenschein.gif" }, // Christmas Deko (Platzhalter, keine Karte)
     2:  { code: "vv5wqhmw", word: "HEART", start: "Hello", intro: "Oh? Hoho SANTA What's this? PRESENT\nIt seems to be your very own\n✨ Christmas Wordle ✨\n\nMerry Christmas Ági and enjoy! CHRISTMASTREE" },
     3:  { code: "nph27ccs", word: "SNOWY", start: "Guten Morgen Sonnenschein! SUN" },
     4:  { code: "xk9zr8yv", word: "ANGEL", start: "..." },
@@ -120,7 +129,10 @@ const LAST_TRY_MESSAGE = "LAST CHANCE ÁGI!";
    - dialog:  Text im Dialogfenster. Darf etwas länger sein.
    - button1: Beschriftung des linken Buttons.
    - button2: Beschriftung des rechten Buttons.
-   - delay:   Wartezeit nach dem Aufdecken des 6. Fehlversuchs, bis sich der Dialog öffnet.
+   - image:   OPTIONAL. Bild/Sticker/GIF im Dialog, über dem Text (Pfad wie
+              bei introImage, z. B. "img/sad-santa.gif"). Leer lassen ("")
+              oder die Zeile löschen = kein Bild.
+   - delay:  Wartezeit nach dem Aufdecken des 6. Fehlversuchs, bis sich der Dialog öffnet.
               In Millisekunden: 1000 = 1 Sekunde. Solange ist keine Eingabe möglich.
    -------------------------------------------------------------------------- */
 const BONUS = {
@@ -128,6 +140,7 @@ const BONUS = {
     dialog:  "...",
     button1: "Yes",
     button2: "YESSS!",
+    image:   "",
     delay:   2000,
 };
 

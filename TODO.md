@@ -20,10 +20,6 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 - [x] HTML/JavaScript: Bild-Element (`<img>`) in beiden Dialogen, das nur angezeigt wird, wenn ein Bild angegeben ist; der Begrüßungs-Dialog öffnet sich auch nur mit Bild ohne Text
 - [x] CSS: Größe der Bilder begrenzen, damit sie auf jedem Handy passen
 
-### Optional: Kalender mit allen bisherigen Tagen
-- [ ] Kleine Extra-Seite (z. B. `calendar.html`), auf der man alle bisher gespielten Wörter mit der Anzahl der benötigten Versuche sieht
-- [ ] Die Daten kommen aus den gespeicherten Spielständen im Handy-Speicher (`agis-wordle-day-N`); nur Tage anzeigen, die schon gespielt wurden
-
 ### Optional: Sonstiges
 - [ ] Mehrere Pools für die Aufmunterungen je nach Fortschritt (Anzahl grüner/gelber Buchstaben), aus denen jeweils zufällig gewählt wird
 - [ ] Lesbarkeit prüfen: weiße Schrift auf hellem Gold ist evtl. schwer zu lesen (dunklere Schrift oder dunkleres Gold)
@@ -56,6 +52,13 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 ### Push-Benachrichtigungen (ntfy)
 - [x] Push-Nachricht an mich über ntfy.sh, wenn sie den ersten Versuch eines Tages abschickt und wenn sie gewinnt (mit Anzahl der Versuche) oder verliert
 - [x] Keine Nachricht beim Wiederherstellen des Spielstands; Schalter `NOTIFY.enabled` in `config.js` zum Abschalten beim Testen
+
+### Adventskalender-Seite (`calendar.html`)
+- [x] 24 Türen im Raster (4×6, Reihenfolge in `config.js` unter `CALENDAR.order`), passt ohne Scrollen auf den Bildschirm
+- [x] Gespielte Tage (aus dem gespeicherten Spielstand) gehen beim Laden nacheinander auf und zeigen Wort + Anzahl der Versuche (✗ bei Niederlage, „…“ wenn angefangen); Antippen führt zum Wordle des Tages
+- [x] Nicht gespielte Türen bleiben zu: Antippen lässt sie wackeln und zeigt `CALENDAR.closedMessage`
+- [x] Basis-Adresse ohne Code leitet zum Kalender weiter; im Spiel führt das 🎁-Icon links im Titel zum Kalender
+- [x] Hinweis: Der Kalender kennt nur Spielstände aus demselben Browser auf demselben Handy (nicht als App zum Home-Bildschirm hinzufügen, das hat einen eigenen Speicher)
 
 ### Spielstand
 - [x] Spielstand pro Tag im Handy-Speicher (Versuche, Farben, Tastatur, Sieg/Niederlage, Bonusreihe), damit Neuladen nichts zurücksetzt

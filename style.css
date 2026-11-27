@@ -144,6 +144,8 @@ header {                         /* Bereich mit dem Titel */
     align-items: center;         /* Titel senkrecht mittig im Bereich */
     justify-content: center;     /* Titel waagerecht mittig im Bereich */
     flex-shrink: 0;              /* Verhindert, dass der Titel zusammengedrückt wird. Nicht ändern */
+    position: relative;          /* Bezugspunkt für das Kalender-Icon (#calendar-link, position: absolute) */
+    width: 100%;                 /* Volle Breite, damit das Icon ganz links sitzen kann. Ohne wäre der Header nur so breit wie der Titel (der Container zentriert alles) und das Icon läge auf dem Titel */
 }
 
 header h1 {                      /* Der Titeltext selbst */
@@ -152,6 +154,18 @@ header h1 {                      /* Der Titeltext selbst */
     white-space: nowrap;         /* Titel bricht nie in zwei Zeilen um. Einstellbar: normal (Umbruch erlauben) */
     color: var(--gold-accent);   /* Titelfarbe (Gold aus Abschnitt 1) */
     letter-spacing: 0.5px;       /* Abstand zwischen Buchstaben. Einstellbar: Pixelwert, 0 = eng, 2px = weit */
+}
+
+#calendar-link {                 /* Icon-Link zum Adventskalender, links im Header (nur im Spiel, nicht auf der Kalender-Seite) */
+    position: absolute;          /* Aus dem Fluss nehmen: verschiebt den Titel nicht und braucht keinen Platz, die Kacheln bleiben gleich groß */
+    left: 0;                     /* Ganz links im Header. Einstellbar: z.B. "right: 0" statt "left: 0" für die rechte Seite */
+    top: 50%;                    /* Senkrecht mittig: oben auf halbe Höhe … */
+    transform: translateY(-50%); /* … und um die eigene halbe Höhe zurück */
+    font-size: clamp(1.1rem, 5vw, 1.5rem); /* Größe des Icons. Einstellbar: Minimum 1.1rem, 5vw = 5% der Breite, Maximum 1.5rem */
+    line-height: 1;              /* Zeilenhöhe = Schriftgröße (keine zusätzliche Höhe) */
+    text-decoration: none;       /* Keine Link-Unterstreichung */
+    padding: 4px;                /* Etwas größere Tippfläche um das Icon. Einstellbar: Pixelwert */
+    -webkit-tap-highlight-color: transparent; /* Kein graues Aufblitzen beim Antippen auf iPhones/Android */
 }
 
 

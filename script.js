@@ -532,6 +532,11 @@ if (today) {
         }
         introDialog.showModal();
     }
+} else if (!currentCode) {
+    // Link ganz ohne Code (z. B. nur die Basis-Adresse): zum Adventskalender weiterleiten.
+    // replace statt href: Die Basis-Adresse landet nicht im Verlauf. Sonst würde "Zurück" im Kalender
+    // wieder hierher führen, sofort erneut weiterleiten, und man käme nie mehr zurück
+    location.replace("calendar.html");
 } else {
     // Ungültiger Link: Nachricht anzeigen
     showMessage(INVALID_LINK_MESSAGE);

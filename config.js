@@ -212,6 +212,25 @@ const CONFETTI = {
               und nichts Privates in die Nachrichten schreiben.
    -------------------------------------------------------------------------- */
 const NOTIFY = {
-    enabled: true,                    // false = keine Benachrichtigungen (z. B. beim eigenen Testen)
+    enabled: false,                    // false = keine Benachrichtigungen (z. B. beim eigenen Testen)
     topic:   "agis-advent-wordle-g5zm2i3i7j",  // dein Topic aus der ntfy-App
+};
+
+
+/* --------------------------------------------------------------------------
+   KALENDER-SEITE (calendar.html): Adventskalender mit allen 24 Türen.
+   Gespielte Türen sind offen und führen zum Wordle des Tages, die anderen
+   bleiben zu.
+   - start:         Nachricht oben im Popup beim Öffnen des Kalenders.
+                    Max. ca. 60 Zeichen.
+   - closedMessage: Nachricht beim Antippen einer noch nicht gespielten Tür.
+                    Max. ca. 60 Zeichen.
+   - order:         Reihenfolge der Türen, zeilenweise von links oben nach
+                    rechts unten, 4 Türen pro Zeile. Jeder Tag genau einmal.
+                    Z. B. so anordnen wie im echten Kalender.
+   -------------------------------------------------------------------------- */
+const CALENDAR = {
+    start: "Your Christmas Wordles so far ✨",                     // Nachricht oben im Popup
+    closedMessage: "Patience, Ági! This door isn't open yet 🎁",   // Beim Antippen einer geschlossenen Tür
+    order: [7, 15, 2, 21, 11, 4, 18, 9, 23, 1, 13, 6, 20, 16, 3, 10, 24, 8, 12, 19, 5, 22, 14, 17], // Reihenfolge der Türen
 };

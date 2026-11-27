@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Zeichensatz und Viewport-Einstellungen für optimale Handydarstellung (verhindert unabsichtliches Zoomen) -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Wordle Advent Calendar</title>
+    <!-- Verknüpfung zur externen CSS-Design-Datei -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts Schriftart einbinden -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hauptcontainer: nutzt dieselbe Klasse wie das Spiel (Breite, Abstände, Zentrierung aus style.css) -->
+    <main class="game-container">
+        <header>
+            <h1>🎄 Ági's Advent Calendar 🎄</h1>
+        </header>
+        <!-- Popup wie im Spiel (muss leer bleiben, wegen :empty) -->
+        <div id="message-container"></div>
+        <!-- Hier erzeugt calendar.js die 24 Türen -->
+        <div id="calendar"></div>
+    </main>
+
+    <!-- Tage, Wörter und Kalender-Texte (DAYS, CALENDAR) -->
+    <script src="config.js"></script>
+    <!-- Baut die Türen und reagiert aufs Antippen -->
+    <script src="calendar.js"></script>
+</body>
+</html>

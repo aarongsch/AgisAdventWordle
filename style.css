@@ -389,3 +389,67 @@ header h1 {                      /* Der Titeltext selbst */
     opacity: 0.4;                /* Halb durchsichtig, damit man sieht, dass er noch nicht geht. Einstellbar: 0 = unsichtbar, 1 = normal */
     cursor: default;             /* Kein Handzeiger bei Maus-Bedienung am PC */
 }
+
+/* ==========================================================================
+   11. KALENDER-SEITE (calendar.html)
+   24 Türen im Raster (4 Spalten x 6 Zeilen). Jede Tür besteht aus zwei
+   übereinanderliegenden Ebenen: .door-inside (dahinter, Wort + Versuche) und
+   .door-front (vorne, Nummer). Gespielte Türen bekommen von calendar.js die
+   Klasse "open", dann dreht sich die Vorderseite weg.
+   ========================================================================== */
+#calendar {                      /* Container mit allen Türen */
+    --door-gap: 8px;             /* Abstand zwischen den Türen. Einstellbar: Pixelwert */
+    /* Türgröße automatisch berechnen (NICHT ändern), gleiches Prinzip wie bei den Kacheln in Abschnitt 2: */
+    --door-by-width: calc((var(--content-w) - 3 * var(--door-gap)) / 4); /* Größe, die in die BREITE passt: (Breite - 3 Lücken) / 4 Spalten */
+    --door-by-height: calc((var(--app-h) - 2 * var(--pad-y) - var(--header-h) - var(--msg-h) - 2 * var(--gap) - 5 * var(--door-gap)) / 6); /* Größe, die in die HÖHE passt: Bildschirm minus Ränder, Titel, Popup, 2 Lücken, 5 Türabstände, geteilt durch 6 Zeilen */
+    --door-size: min(var(--door-by-width), var(--door-by-height)); /* Endgültige Türgröße: der kleinere Wert, damit alles ohne Scrollen passt */
+    display: grid;               /* Türen im Raster anordnen */
+    grid-template-columns: repeat(4, var(--door-size)); /* 4 Spalten. Bei Änderung auch die 4 in --door-by-width anpassen */
+    grid-auto-rows: var(--door-size); /* Jede Zeile so hoch wie eine Tür breit ist (quadratische Türen) */
+    gap: var(--door-gap);        /* Abstand zwischen den Türen (siehe oben) */
+}
+
+.door {                          /* Eine Tür (Rahmen für die beiden Ebenen) */
+    position: relative;          /* Bezugspunkt für die beiden Ebenen darin (position: absolute) */
+    perspective: 600px;          /* 3D-Tiefe für die Drehung der Vorderseite. Einstellbar: kleiner = stärkerer 3D-Effekt */
+    cursor: pointer;             /* Handzeiger bei Maus-Bedienung am PC */
+    -webkit-tap-highlight-color: transparent; /* Kein graues Aufblitzen beim Antippen auf iPhones/Android */
+}
+
+.door-inside,
+.door-front {                    /* Gemeinsame Regeln für beide Ebenen */
+    position: absolute;          /* Ebenen aus dem normalen Fluss nehmen, damit sie übereinander liegen */
+    inset: 0;                    /* Beide füllen die Tür komplett aus (oben, rechts, unten, links = 0) */
+    display: flex;               /* Flexbox zum Zentrieren des Inhalts */
+    align-items: center;         /* Inhalt senkrecht mittig */
+    justify-content: center;     /* Inhalt waagerecht mittig */
+    text-align: center;          /* Mehrzeiliger Text zentriert */
+    border-radius: 6px;          /* Rundung der Ecken. Einstellbar: 0 = eckig */
+    font-weight: bold;           /* Fettdruck */
+}
+
+.door-inside {                   /* Hinter der Tür: Wort und Anzahl der Versuche */
+    background-color: #0d2418;   /* Dunkles Grün hinter der Tür. Einstellbar: Hex-Farbcode */
+    border: 2px dashed var(--gold-accent); /* Gestrichelter Goldrahmen (Gold aus Abschnitt 1) */
+    white-space: pre-line;       /* \n im Text (calendar.js) = Zeilenumbruch */
+    font-size: clamp(0.6rem, 3vw, 0.85rem); /* Schriftgröße. Einstellbar: Minimum 0.6rem, 3vw = 3% der Breite, Maximum 0.85rem */
+}
+
+.door-front {                    /* Vorderseite der Tür mit der Nummer */
+    background-color: #8b1e1e;   /* Weihnachtsrot. Einstellbar: Hex-Farbcode */
+    border: 2px solid var(--gold-accent); /* Goldrahmen (Gold aus Abschnitt 1) */
+    color: var(--gold-accent);   /* Goldene Nummer */
+    font-size: clamp(1rem, 6vw, 1.6rem); /* Größe der Nummer. Einstellbar: Minimum 1rem, 6vw = 6% der Breite, Maximum 1.6rem */
+    transform-origin: left center; /* Drehpunkt = linke Kante, wie ein Scharnier */
+    transition: transform 0.8s ease; /* Öffnen dauert 0.8 Sekunden. Einstellbar: Dauer */
+    backface-visibility: hidden; /* Rückseite unsichtbar: Ab 90 Grad Drehung verschwindet die Tür, das Innere ist frei */
+}
+
+.door.open .door-front {         /* Vorderseite einer geöffneten Tür (Klasse "open" setzt calendar.js) */
+    transform: rotateY(-105deg); /* Um die senkrechte Achse nach vorne-links aufschwingen. Einstellbar: Winkel */
+    pointer-events: none;        /* Offene Tür fängt keine Klicks mehr ab, das Antippen landet bei der Tür selbst */
+}
+
+.door.shake {                    /* Geschlossene Tür, die gerade wackelt (Klasse setzt calendar.js beim Antippen) */
+    animation: shake 0.4s;       /* Nutzt die vorhandene Wackel-Animation aus Abschnitt 8 */
+}

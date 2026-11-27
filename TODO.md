@@ -5,9 +5,9 @@ Wordle-Spiel für den Adventskalender. In manche Türchen kommt ein ausgedruckte
 ## Noch offen
 
 ### Vor dem 1. Dezember
-- [ ] Probedruck der QR-Codes (`qr-codes.html`) mit Skalierung 100 %: Kartengröße mit dem Lineal prüfen, eine Karte knicken, wieder aufklappen und scannen
-- [ ] Alle QR-Codes drucken und ausschneiden (Platzhalter-Karten aufheben, nicht wegwerfen)
-- [ ] Jeden Link auf dem Handy über GitHub Pages prüfen (jede Karte einmal scannen, danach mit `&reset` den Spielstand wieder löschen)
+- [x] Probedruck der QR-Codes (`qr-codes.html`) mit Skalierung 100 %: Kartengröße mit dem Lineal prüfen, eine Karte knicken, wieder aufklappen und scannen
+- [x] Alle QR-Codes drucken und ausschneiden
+- [x] Jeden Link auf dem Handy über GitHub Pages prüfen (jede Karte einmal scannen, danach mit `&reset` den Spielstand wieder löschen)
 - [ ] Echte Texte in `config.js`: Wörter und Startnachrichten der Wordle-Tage, Aufmunterungen, Siegesnachrichten, Bonus-Dialog, Begrüßungs-Dialoge
 - [ ] Längste Nachrichten (vor allem mit Emojis) auf kleinem Handy prüfen (iPhone SE in der Device Toolbar): passen sie in 2 Zeilen? Emojis sind breiter als Buchstaben
 - [ ] **GANZ ZUM SCHLUSS: Push-Benachrichtigungen einschalten** (`NOTIFY.enabled: true` in `config.js`), committen, pushen und einmal auf dem Handy prüfen

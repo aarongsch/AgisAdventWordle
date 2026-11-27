@@ -455,7 +455,7 @@ header h1 {                      /* Der Titeltext selbst */
     color: var(--gold-accent);   /* Goldene Nummer */
     font-size: clamp(1rem, 6vw, 1.6rem); /* Größe der Nummer. Einstellbar: Minimum 1rem, 6vw = 6% der Breite, Maximum 1.6rem */
     transform-origin: left center; /* Drehpunkt = linke Kante, wie ein Scharnier */
-    transition: transform 0.8s ease; /* Öffnen dauert 0.8 Sekunden. Einstellbar: Dauer */
+    transition: transform 1s ease; /* Öffnen dauert 1 Sekunde. Einstellbar: Dauer */
     backface-visibility: hidden; /* Rückseite unsichtbar: Ab 90 Grad Drehung verschwindet die Tür, das Innere ist frei */
 }
 
